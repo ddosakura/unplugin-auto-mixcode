@@ -1,0 +1,13 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave":{
+		"source.organizeImports.rome": true
+	},
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "[javascript][typescript]": {
+    "editor.defaultFormatter": "rome.rome"
+  },
+  "editor.inlayHints.enabled": "offUnlessPressed",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

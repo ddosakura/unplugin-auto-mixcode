@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "packageManager": "pnpm@7.26.3",
+  "workspaces": [
+    "examples/*",
+    "packages/*"
+  ],
+  "name": "unplugin-auto-mixcode",
+  "author": "ddosakura",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "scripts": {
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish",
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.0",
+    "@digitak/esrun": "^3.2.19",
+    "@mixcode/tsconfig": "workspace:*",
+    "@types/node": "^18.11.19",
+    "rome": "^11.0.0",
+    "tsup": "^6.5.0",
+    "turbo": "^1.7.3",
+    "typescript": "^4.9.5",
+    "unocss": "^0.49.4",
+    "vite": "^4.1.1",
+    "vitest": "^0.28.4"
+  }
+}
