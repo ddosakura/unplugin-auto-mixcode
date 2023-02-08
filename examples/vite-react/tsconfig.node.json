@@ -1,0 +1,6 @@
+{
+  "extends": "@mixcode/tsconfig/node.json",
+  "include": [
+    "vite.config.ts"
+  ]
+}

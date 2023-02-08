@@ -1,0 +1,30 @@
+{
+  "globals": {
+    "ExampleDialog": true,
+    "createRef": true,
+    "forwardRef": true,
+    "lazy": true,
+    "memo": true,
+    "startTransition": true,
+    "useCallback": true,
+    "useContext": true,
+    "useCountDown": true,
+    "useCounter": true,
+    "useDebugValue": true,
+    "useDeferredValue": true,
+    "useEffect": true,
+    "useExampleDialog": true,
+    "useId": true,
+    "useImperativeHandle": true,
+    "useInsertionEffect": true,
+    "useLayoutEffect": true,
+    "useMemo": true,
+    "usePromisifyDialog": true,
+    "useReducer": true,
+    "useRef": true,
+    "useState": true,
+    "useSyncExternalStore": true,
+    "useTransition": true,
+    "withExampleDialog": true
+  }
+}
