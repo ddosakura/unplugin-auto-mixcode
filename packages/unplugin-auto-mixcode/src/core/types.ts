@@ -1,3 +1,4 @@
+import type { Awaitable } from "@antfu/utils";
 import type { FilterPattern } from "@rollup/pluginutils";
 import type MagicString from "magic-string";
 import type { VitePlugin } from "unplugin";
@@ -15,8 +16,8 @@ type SourceDescription = Exclude<
 export interface Snippet {
   suffix: string;
   resolve(name: string): boolean;
-  load(id: string): SourceDescription | Promise<SourceDescription>;
-  dts(id: string): string | Promise<string>;
+  load(id: string): Awaitable<SourceDescription>;
+  dts(id: string): Awaitable<string>;
   macro?(s: MagicString): void;
 }
 
@@ -32,6 +33,11 @@ export interface Options extends Preset {
   include?: FilterPattern;
   exclude?: FilterPattern;
 
+  root?: string;
+
+  /** @default './auto-mixcode.d.ts' */
+  dts?: boolean | string;
+
   /** @defaultValue 'react' */
   framework?: Framework;
 
@@ -39,5 +45,7 @@ export interface Options extends Preset {
 }
 
 export interface ParsedOptions extends Required<Preset> {
+  root: string;
+  dts: string;
   framework: Framework;
 }

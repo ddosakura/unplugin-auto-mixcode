@@ -9,11 +9,10 @@ import Inspect from "vite-plugin-inspect";
 import unocssConfig from "../../unocss.config";
 
 import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
-import type FixedTypeofAutoMixcode from "@mixcode/unplugin-auto-mixcode/dist/vite";
-// @ts-ignore
 import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
-const mixcode = (AutoMixcode as typeof FixedTypeofAutoMixcode)({
+const mixcode = AutoMixcode({
+  dts: "src/auto-mixcode.d.ts",
   presets: [presetRecommend],
 });
 
@@ -35,11 +34,5 @@ export default defineConfig({
       resolvers: [mixcode.resolver],
     }),
     mixcode,
-    {
-      name: "tmp",
-      async handleHotUpdate({ file }) {
-        console.log("[hook handleHotUpdate]", file);
-      },
-    },
   ],
 });

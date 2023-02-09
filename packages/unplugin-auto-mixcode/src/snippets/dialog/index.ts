@@ -5,7 +5,7 @@ import react from "./react";
 /** ~mixcode/dialog/useXxxDialog */
 export const dialog: FrameworkSnippet = {
   react,
-  // TODO: impl
+  // TODO: impl vue/useXxxDialog
   vue: react,
   vue2: react,
 };

@@ -3,6 +3,7 @@ import { macroRegExp } from "@/core/utils";
 
 import { IINJECTED_MIXCODE_DIALOG } from "./common";
 
+// TODO: a-zA-Z_$; prefix use$; suffix Dialog; macro with scope; closable(by abortsignal)
 export default <Snippet>{
   suffix: ".tsx",
   resolve(name) {
@@ -13,17 +14,17 @@ export default <Snippet>{
     return `
 import { usePromisifyDialog } from "@mixcode/glue-react";
 export default function(props) {
-return usePromisifyDialog(${componentName}, props);
+  return usePromisifyDialog(${componentName}, props);
 }`;
   },
   dts(id) {
     const componentName = id.replace("use", "");
     return `
 declare module "~mixcode/dialog/${id}" {
-import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
-export default function (
-  teleportProps?: TeleportProps,
-): OpenPromisifyDialog<typeof ${componentName}>;
+  import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
+  export default function (
+    teleportProps?: TeleportProps,
+  ): OpenPromisifyDialog<typeof ${componentName}>;
 }`;
   },
   macro(s) {

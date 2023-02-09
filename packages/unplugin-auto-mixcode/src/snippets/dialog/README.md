@@ -20,4 +20,4 @@ function Example() {
 
 ## Vue
 
-// TODO: impl
+// TODO: impl vue/useXxxDialog

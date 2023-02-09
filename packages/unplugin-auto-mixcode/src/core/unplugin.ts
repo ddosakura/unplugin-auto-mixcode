@@ -20,8 +20,16 @@ export default createUnplugin<Options>((options = {}) => {
     options.exclude || [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
   );
 
-  const { framework = "react", presets = [], snippets = {} } = options;
+  const {
+    dts: rawDts,
+    framework = "react",
+    presets = [],
+    snippets = {},
+  } = options;
+  const dts = rawDts === true ? "./auto-mixcode.d.ts" : rawDts;
   const ctx: Context = new Context({
+    root: process.cwd(),
+    dts: dts ? dts : "",
     framework,
     snippets: {
       ...snippetsFromPreset(presets),
@@ -30,7 +38,6 @@ export default createUnplugin<Options>((options = {}) => {
   });
 
   return {
-    // TODO: writeConfigFiles
     name,
     enforce: "pre",
 
@@ -55,10 +62,11 @@ export default createUnplugin<Options>((options = {}) => {
     async load(id) {
       if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
       const snippetType = basename(dirname(id));
-      const { suffix = "", load } = ctx.snippets[snippetType] ?? {};
+      const { suffix = "", load, dts } = ctx.snippets[snippetType] ?? {};
       if (!load) return;
       const fn = basename(id, suffix);
       const result = await load(fn);
+      ctx.updateDts(id, await dts(fn));
       return typeof result === "string"
         ? {
             map: { mappings: "" },
@@ -67,11 +75,23 @@ export default createUnplugin<Options>((options = {}) => {
         : result;
     },
 
+    /*
+    async buildStart() {
+      await ctx.scanDirs()
+    },
+    async buildEnd() {
+      await ctx.writeDtsFile()
+    },
+    */
+
     vite: {
       configResolved(config) {
         checkUnimportPlugn(config);
 
-        // ctx.options.root = config.root;
+        if (options.root) {
+          ctx.setRoot(options.root);
+        }
+
         if (!options.framework) {
           if (checkVuePlugin(config)) {
             ctx.setFramework("vue");
@@ -81,6 +101,11 @@ export default createUnplugin<Options>((options = {}) => {
           }
         }
       },
+      /*
+      async handleHotUpdate({ file }) {
+        console.log("[hook handleHotUpdate]", file);
+      },
+      */
     },
   };
 });

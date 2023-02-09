@@ -14,6 +14,7 @@ function Example() {
     const resp = await open({ name });
     resp && setName(resp.name);
   };
+  const hello = useHelloWorldDialog();
   return (
     <>
       <span>{name}</span>
@@ -21,6 +22,7 @@ function Example() {
       <button onClick={() => setDisabled((disabled) => !disabled)}>
         switch
       </button>
+      <button onClick={hello}>hello</button>
       {/** @mixcode dialog */}
     </>
   );
@@ -29,7 +31,7 @@ function Example() {
 function App() {
   const [count, setCount] = useState(0);
 
-  const open = useExampleDialog();
+  const _open = useExampleDialog();
 
   return (
     <div className="App color-gray">

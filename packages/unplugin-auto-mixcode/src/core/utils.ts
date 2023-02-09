@@ -1,3 +1,6 @@
+import { mkdir, writeFile as rawWriteFile } from "node:fs/promises";
+import { dirname } from "node:path";
+
 import type { VitePlugin } from "unplugin";
 
 import type {
@@ -94,3 +97,8 @@ export const createSnippetResolver = (snippets: Record<string, Snippet>) => {
 };
 
 export type SnippetResolver = ReturnType<typeof createSnippetResolver>;
+
+export async function writeFile(filePath: string, content: string) {
+  await mkdir(dirname(filePath), { recursive: true });
+  return await rawWriteFile(filePath, content, "utf-8");
+}

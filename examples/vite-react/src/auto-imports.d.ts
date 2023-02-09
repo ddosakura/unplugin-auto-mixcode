@@ -2,6 +2,7 @@
 export {}
 declare global {
   const ExampleDialog: typeof import('./components/examples')['ExampleDialog']
+  const HelloWorldDialog: typeof import('./components/examples')['HelloWorldDialog']
   const createRef: typeof import('react')['createRef']
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']
@@ -15,6 +16,7 @@ declare global {
   const useDeferredValue: typeof import('react')['useDeferredValue']
   const useEffect: typeof import('react')['useEffect']
   const useExampleDialog: typeof import('~mixcode/dialog/useExampleDialog')['default']
+  const useHelloWorldDialog: typeof import('~mixcode/dialog/useHelloWorldDialog')['default']
   const useId: typeof import('react')['useId']
   const useImperativeHandle: typeof import('react')['useImperativeHandle']
   const useInsertionEffect: typeof import('react')['useInsertionEffect']

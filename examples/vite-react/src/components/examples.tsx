@@ -1,3 +1,11 @@
+export const HelloWorldDialog: React.FC = () => {
+  return (
+    <div>
+      <span>Hello World!</span>
+    </div>
+  );
+};
+
 export const ExampleDialog: React.FC<{
   name: string;
   onResolve: (value?: { name: string }) => void;

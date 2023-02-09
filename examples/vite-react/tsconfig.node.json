@@ -4,6 +4,7 @@
     "composite": true
   },
   "include": [
+    "node-env.d.ts",
     "vite.config.ts"
   ]
 }
