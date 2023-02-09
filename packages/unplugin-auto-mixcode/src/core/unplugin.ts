@@ -8,6 +8,7 @@ import type { Options } from "./types";
 import {
   PREFIX_MIXCODE_SNIPPET,
   checkUnimportPlugn,
+  checkVue2Plugin,
   checkVuePlugin,
   name,
   snippetsFromPreset,
@@ -74,6 +75,9 @@ export default createUnplugin<Options>((options = {}) => {
         if (!options.framework) {
           if (checkVuePlugin(config)) {
             ctx.setFramework("vue");
+          }
+          if (checkVue2Plugin(config)) {
+            ctx.setFramework("vue2");
           }
         }
       },

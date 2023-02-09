@@ -9,11 +9,11 @@ import Inspect from "vite-plugin-inspect";
 import unocssConfig from "../../unocss.config";
 
 import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
-import type { default as FixxedTypeofAutoMixcode } from "@mixcode/unplugin-auto-mixcode/dist/vite";
+import type FixedTypeofAutoMixcode from "@mixcode/unplugin-auto-mixcode/dist/vite";
 // @ts-ignore
 import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
-const mixcode = (AutoMixcode as typeof FixxedTypeofAutoMixcode)({
+const mixcode = (AutoMixcode as typeof FixedTypeofAutoMixcode)({
   presets: [presetRecommend],
 });
 

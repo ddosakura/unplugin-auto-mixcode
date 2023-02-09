@@ -31,9 +31,11 @@ export function checkReactPlugin(config: Parameters<ConfigResolvedFn>[0]) {
 }
 
 export function checkVuePlugin(config: Parameters<ConfigResolvedFn>[0]) {
-  return config.plugins.find((p) =>
-    ["vite:vue", "vite-plugin-vue2"].includes(p.name),
-  );
+  return config.plugins.find((p) => p.name === "vite:vue");
+}
+
+export function checkVue2Plugin(config: Parameters<ConfigResolvedFn>[0]) {
+  return config.plugins.find((p) => p.name === "vite-plugin-vue2");
 }
 
 export function checkSolidPlugin(config: Parameters<ConfigResolvedFn>[0]) {

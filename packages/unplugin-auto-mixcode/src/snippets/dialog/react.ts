@@ -26,10 +26,9 @@ export default function (
 ): OpenPromisifyDialog<typeof ${componentName}>;
 }`;
   },
-  transform(code) {
-    // TODO: handle sourcemap by MagicString
+  macro(s) {
     let counter = 0;
-    const injected = code.replace(
+    s.replace(
       new RegExp("([a-zA-Z_]\\w*) = use([A-Z]\\w*)Dialog\\(", "g"),
       (_$0, $1, $2) =>
         `[${IINJECTED_MIXCODE_DIALOG}${counter++}, ${$1}] = use${$2}Dialog(`,
@@ -41,6 +40,7 @@ export default function (
         return `typeof ${dialog} === 'undefined' ? null : ${dialog}`;
       })
       .join("}{");
-    return injected.replace(macroRegExp("dialog"), `${dialogs}`);
+    s.replace(macroRegExp("dialog"), `${dialogs}`);
+    return s;
   },
 };

@@ -13,47 +13,32 @@ export class Context {
   }
   setFramework(framework: Framework) {
     this.options.framework = framework;
-    this.#snippets = parseSnippets(framework, this.options.snippets);
-    this.#resolver = createSnippetResolver(this.#snippets);
+    const snippets = parseSnippets(framework, this.options.snippets);
+    this.#snippets = snippets;
+    this.#resolver = createSnippetResolver(snippets);
+    this.#macro = Object.values(snippets)
+      .map(({ macro }) => macro!)
+      .filter(Boolean);
   }
 
   #snippets: Record<string, Snippet> = {};
   get snippets() {
     return this.#snippets;
   }
+
   #resolver?: SnippetResolver;
   resolver(name: string) {
     return this.#resolver?.(name);
   }
 
-  /*
+  #macro: Array<(s: MagicString) => void> = [];
   async transform(code: string, id: string) {
-    // await importsPromise;
-
     const s = new MagicString(code);
-
-    // await unimport.injectImports(s, id);
-
+    this.#macro.forEach((macro) => macro(s));
     if (!s.hasChanged()) return;
-
-    // writeConfigFilesThrottled();
-
     return {
       code: s.toString(),
       map: s.generateMap({ source: id, includeContent: true }),
     };
-  }
-  */
-
-  async transform(code: string, id: string) {
-    // TODO: handle sourcemap
-    return Object.entries(this.snippets).reduce(
-      async (p, [, { transform }]) => {
-        const code = await p;
-        const result = (await transform?.(code, id)) as string;
-        return result ?? code;
-      },
-      Promise.resolve(code),
-    );
   }
 }
