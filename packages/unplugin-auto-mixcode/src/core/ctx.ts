@@ -49,10 +49,10 @@ export class Context {
     };
   }
 
-  #dtsCache = new Map<string, string>();
   get dts() {
     return resolve(this.options.root, this.options.dts);
   }
+  #dtsCache = new Map<string, string>();
   writeDtsFile() {
     const filePath = this.dts;
     if (!filePath) return;

@@ -20,6 +20,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
     "@digitak/esrun": "^3.2.19",
+    "@iconify/json": "^2.2.19",
     "@mixcode/tsconfig": "workspace:*",
     "@types/node": "^18.11.19",
     "rome": "^11.0.0",

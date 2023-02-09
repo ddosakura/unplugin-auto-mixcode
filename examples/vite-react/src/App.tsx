@@ -31,10 +31,13 @@ function Example() {
 function App() {
   const [count, setCount] = useState(0);
 
-  const _open = useExampleDialog();
+  // const _open = useExampleDialog();
 
   return (
     <div className="App color-gray">
+      <div className="flex">
+        <span className="i-mdi:react text-size-[144px] color-cyan" />
+      </div>
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src="/vite.svg" className="logo" alt="Vite logo" />

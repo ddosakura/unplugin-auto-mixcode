@@ -1,4 +1,8 @@
-import { mkdir, writeFile as rawWriteFile } from "node:fs/promises";
+import {
+  mkdir,
+  readFile as rawReadFile,
+  writeFile as rawWriteFile,
+} from "node:fs/promises";
 import { dirname } from "node:path";
 
 import type { VitePlugin } from "unplugin";
@@ -101,4 +105,23 @@ export type SnippetResolver = ReturnType<typeof createSnippetResolver>;
 export async function writeFile(filePath: string, content: string) {
   await mkdir(dirname(filePath), { recursive: true });
   return await rawWriteFile(filePath, content, "utf-8");
+}
+
+export async function readFile(filePath: string) {
+  try {
+    return await rawReadFile(filePath, "utf-8");
+  } catch {}
+}
+
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function writeJSONFile(filePath: string, data: any) {
+  return writeFile(filePath, JSON.stringify(data, null, 2));
+}
+
+export async function readJSONFile<T>(filePath: string) {
+  try {
+    const text = await readFile(filePath);
+    if (!text) return;
+    return JSON.parse(text) as T;
+  } catch {}
 }

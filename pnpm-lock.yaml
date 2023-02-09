@@ -6,6 +6,7 @@ importers:
     specifiers:
       '@changesets/cli': ^2.26.0
       '@digitak/esrun': ^3.2.19
+      '@iconify/json': ^2.2.19
       '@mixcode/tsconfig': workspace:*
       '@types/node': ^18.11.19
       rome: ^11.0.0
@@ -18,6 +19,7 @@ importers:
     devDependencies:
       '@changesets/cli': 2.26.0
       '@digitak/esrun': 3.2.19
+      '@iconify/json': 2.2.19
       '@mixcode/tsconfig': link:packages/tsconfig
       '@types/node': 18.11.19
       rome: 11.0.0
@@ -949,6 +951,13 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@iconify/json/2.2.19:
+    resolution: {integrity: sha512-u9GEiedZRmDAqbYa2A43KG5BQ6lYrFtwpoBm9CJuA7FyN4UUrf3qyaNvEaD9R+dfie8KXqqTa2hKEAoJ7F1McA==}
+    dependencies:
+      '@iconify/types': 2.0.0
+      pathe: 1.1.0
+    dev: true
 
   /@iconify/types/2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}

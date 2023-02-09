@@ -12,7 +12,6 @@ type SourceDescription = Exclude<
   void | null | undefined
 >;
 
-// TODO: get options/viteConfig in methods
 export interface Snippet {
   suffix: string;
   resolve(name: string): boolean;

@@ -3,7 +3,7 @@ import { macroRegExp } from "@/core/utils";
 
 import { IINJECTED_MIXCODE_DIALOG } from "./common";
 
-// TODO: a-zA-Z_$; prefix use$; suffix Dialog; macro with scope; closable(by abortsignal)
+// TODO: a-zA-Z_$; prefix use$; suffix Dialog; macro with scope; closable(by abortsignal); autoclose
 export default <Snippet>{
   suffix: ".tsx",
   resolve(name) {

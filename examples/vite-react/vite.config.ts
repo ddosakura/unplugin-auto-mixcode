@@ -5,9 +5,6 @@ import UnoCSS from "unocss/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Inspect from "vite-plugin-inspect";
 
-// @ts-ignore
-import unocssConfig from "../../unocss.config";
-
 import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
 import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
@@ -21,7 +18,7 @@ export default defineConfig({
   server: { port: 3000 },
   plugins: [
     Inspect(),
-    UnoCSS(unocssConfig),
+    UnoCSS(),
     react(),
     AutoImport({
       // eslintrc: { enabled: true },
