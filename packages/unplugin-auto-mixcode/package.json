@@ -1,0 +1,57 @@
+{
+  "name": "@mixcode/unplugin-auto-mixcode",
+  "repository": "https://github.com/ddosakura/unplugin-auto-mixcode.git",
+  "author": "ddosakura",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "files": [
+    "dist/*"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./esbuild": {
+      "require": "./dist/esbuild.js",
+      "import": "./dist/esbuild.mjs",
+      "types": "./dist/esbuild.d.ts"
+    },
+    "./rollup": {
+      "require": "./dist/rollup.js",
+      "import": "./dist/rollup.mjs",
+      "types": "./dist/rollup.d.ts"
+    },
+    "./vite": {
+      "require": "./dist/vite.js",
+      "import": "./dist/vite.mjs",
+      "types": "./dist/vite.d.ts"
+    },
+    "./webpack": {
+      "require": "./dist/webpack.js",
+      "import": "./dist/webpack.mjs",
+      "types": "./dist/webpack.d.ts"
+    },
+    "./snippets": {
+      "require": "./dist/snippets/index.js",
+      "import": "./dist/snippets/index.mjs",
+      "types": "./dist/snippets/index.d.ts"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsup --watch src",
+    "build": "tsup",
+    "lint": "rome ci --indent-style space src"
+  },
+  "dependencies": {
+    "@antfu/utils": "^0.7.2",
+    "@rollup/pluginutils": "^5.0.2",
+    "magic-string": "^0.27.0",
+    "unplugin": "^1.0.1"
+  }
+}

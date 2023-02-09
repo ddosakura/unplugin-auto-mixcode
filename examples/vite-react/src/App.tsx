@@ -32,7 +32,7 @@ function App() {
   const open = useExampleDialog();
 
   return (
-    <div className="App">
+    <div className="App color-gray">
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
