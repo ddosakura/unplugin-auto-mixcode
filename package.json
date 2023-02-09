@@ -14,6 +14,7 @@
     "publish-packages": "turbo run build lint test && changeset version && changeset publish",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "start": "turbo run start --parallel",
     "lint": "turbo run lint"
   },
   "devDependencies": {

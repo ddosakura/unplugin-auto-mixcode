@@ -1,16 +1,6 @@
 import type { FilterPattern } from "@rollup/pluginutils";
 import type { VitePlugin } from "unplugin";
 
-export interface BaseOptions {
-  include?: FilterPattern;
-  exclude?: FilterPattern;
-}
-
-export interface Options extends BaseOptions {
-  /** @defaultValue 'react' */
-  framework?: "react" | "vue";
-}
-
 export type UnwrapObjectHook<T> = T extends { handler: infer V } ? V : T;
 
 type LoadFn = NonNullable<UnwrapObjectHook<VitePlugin["load"]>>;
@@ -28,4 +18,26 @@ export interface Snippet {
   load(id: string): SourceDescription | Promise<SourceDescription>;
   dts(id: string): string | Promise<string>;
   transform?(code: string, id: string): ReturnType<TransformFn>;
+}
+
+export type Framework = "react" | "vue";
+
+export type FrameworkSnippet = Record<Framework, Snippet>;
+
+export interface Preset {
+  snippets?: Record<string, Snippet | FrameworkSnippet>;
+}
+
+export interface Options extends Preset {
+  include?: FilterPattern;
+  exclude?: FilterPattern;
+
+  /** @defaultValue 'react' */
+  framework?: Framework;
+
+  presets?: Array<Preset>;
+}
+
+export interface ParsedOptions extends Required<Preset> {
+  framework: Framework;
 }

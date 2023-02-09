@@ -1,6 +1,5 @@
 import { basename, dirname } from "node:path";
 
-import { snippets } from "@/snippets";
 import { createFilter } from "@rollup/pluginutils";
 import { createUnplugin } from "unplugin";
 
@@ -11,6 +10,7 @@ import {
   checkUnimportPlugn,
   checkVuePlugin,
   name,
+  snippetsFromPreset,
 } from "./utils";
 
 export default createUnplugin<Options>((options = {}) => {
@@ -18,15 +18,24 @@ export default createUnplugin<Options>((options = {}) => {
     options.include || [/\.[jt]sx?$/, /\.vue$/, /\.vue\?vue/, /\.svelte$/],
     options.exclude || [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
   );
+
+  const { framework = "react", presets = [], snippets = {} } = options;
   const ctx: Context = new Context({
-    framework: "react",
-    ...options,
+    framework,
+    snippets: {
+      ...snippetsFromPreset(presets),
+      ...snippets,
+    },
   });
 
   return {
     // TODO: writeConfigFiles
     name,
     enforce: "pre",
+
+    resolver(name: string) {
+      return ctx.resolver(name);
+    },
 
     transformInclude(id) {
       return filter(id);
@@ -38,14 +47,14 @@ export default createUnplugin<Options>((options = {}) => {
     resolveId(source, _importer) {
       if (!source.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
       const snippetType = basename(dirname(source));
-      const { suffix = "" } = snippets[snippetType] ?? {};
+      const { suffix = "" } = ctx.snippets[snippetType] ?? {};
       if (!suffix) return;
       return source.endsWith(suffix) ? source : `${source}${suffix}`;
     },
     async load(id) {
       if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
       const snippetType = basename(dirname(id));
-      const { suffix = "", load } = snippets[snippetType] ?? {};
+      const { suffix = "", load } = ctx.snippets[snippetType] ?? {};
       if (!load) return;
       const fn = basename(id, suffix);
       const result = await load(fn);
@@ -64,7 +73,7 @@ export default createUnplugin<Options>((options = {}) => {
         // ctx.options.root = config.root;
         if (!options.framework) {
           if (checkVuePlugin(config)) {
-            ctx.options.framework = "vue";
+            ctx.setFramework("vue");
           }
         }
       },

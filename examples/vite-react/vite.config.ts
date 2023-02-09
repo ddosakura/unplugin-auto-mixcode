@@ -1,16 +1,21 @@
+import { defineConfig } from "vite";
+
 import react from "@vitejs/plugin-react";
 import UnoCSS from "unocss/vite";
 import AutoImport from "unplugin-auto-import/vite";
-import { defineConfig } from "vite";
 import Inspect from "vite-plugin-inspect";
-
-import AutoMixcode, {
-  createSnippetResolver,
-  snippets,
-} from "@mixcode/unplugin-auto-mixcode";
 
 // @ts-ignore
 import unocssConfig from "../../unocss.config";
+
+import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
+import type { default as FixxedTypeofAutoMixcode } from "@mixcode/unplugin-auto-mixcode/dist/vite";
+// @ts-ignore
+import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
+
+const mixcode = (AutoMixcode as typeof FixxedTypeofAutoMixcode)({
+  presets: [presetRecommend],
+});
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -27,9 +32,9 @@ export default defineConfig({
         // { "@mixcode/glue-react": ["usePromisifyDialog"] },
       ],
       dirs: ["src/hooks", "src/components"],
-      resolvers: [createSnippetResolver(snippets)],
+      resolvers: [mixcode.resolver],
     }),
-    AutoMixcode.vite({}),
+    mixcode,
     {
       name: "tmp",
       async handleHotUpdate({ file }) {
