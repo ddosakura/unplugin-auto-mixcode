@@ -1,3 +1,5 @@
+import "~mixcode";
+
 import "./index.css";
 import "uno.css";
 

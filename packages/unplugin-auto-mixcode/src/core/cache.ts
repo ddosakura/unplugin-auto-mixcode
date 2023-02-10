@@ -68,7 +68,6 @@ export interface CreateCacheStoreOptions {
   snippets: Record<string, Snippet>;
 }
 
-// TODO: active import on dev
 export const createCacheStore = async (options: CreateCacheStoreOptions) => {
   const { root, snippets } = options;
   const cachePath = options.cache ? resolve(root, options.cache) : false;
@@ -146,10 +145,16 @@ export const createCacheStore = async (options: CreateCacheStoreOptions) => {
     writeConfigFilesThrottled();
   };
 
+  const autoImportInitScript = () =>
+    Array.from(dtsCache.keys())
+      .map((token) => `typeof ${token};`)
+      .join("\n");
+
   return {
     writeConfigFiles,
     updateIdentifier,
     updateDts,
     updateImports,
+    autoImportInitScript,
   };
 };

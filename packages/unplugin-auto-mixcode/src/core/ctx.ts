@@ -134,4 +134,18 @@ export class Context {
     const store = await this.cacheStore;
     store.updateImports(importer);
   }
+
+  async initScript(blank = false) {
+    if (blank || !this.devMode) {
+      return {
+        map: { mappings: "" as const },
+        code: "export default ''",
+      };
+    }
+    const store = await this.cacheStore;
+    return {
+      map: { mappings: "" as const },
+      code: store.autoImportInitScript(),
+    };
+  }
 }

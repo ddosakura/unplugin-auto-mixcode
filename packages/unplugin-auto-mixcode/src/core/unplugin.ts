@@ -54,10 +54,14 @@ export default createUnplugin<Options>((options = {}) => {
     },
 
     resolveId(id, importer) {
+      if (id === "~mixcode") return "~mixcode.ts";
+      if (importer === "~mixcode.ts") return "~mixcode.ts?blank";
       if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
       return ctx.resolveId(id, importer);
     },
     load(id) {
+      if (id === "~mixcode.ts") return ctx.initScript();
+      if (id === "~mixcode.ts?blank") return ctx.initScript(true);
       if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
       return ctx.load(id);
     },
