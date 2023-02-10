@@ -131,7 +131,8 @@ export const stringify = (
     if (value instanceof Map) {
       return {
         instanceof: "Map",
-        value: Array.from(value.entries()),
+        // value: Object.fromEntries(Array.from(value.entries())),
+        value: Array.from(value.entries()).sort(([a], [b]) => (a > b ? 1 : -1)),
       };
     }
     if (value instanceof Set) {
@@ -151,6 +152,7 @@ export const parse = (
   reviver = (_key: string, value: any) => {
     if (typeof value === "object" && value !== null) {
       if (value.instanceof === "Map") {
+        // return new Map(Object.entries(value.value));
         return new Map(value.value);
       }
       if (value.instanceof === "Set") {

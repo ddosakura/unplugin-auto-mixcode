@@ -116,6 +116,7 @@ export class Context {
   async load(id: string) {
     const { suffix, load, dts } = this.#snippetVirtual(id);
     if (!load) return;
+    if (!id.endsWith(suffix)) return;
     const fn = basename(id, suffix);
     const result = await load(fn);
     if (!result) return;

@@ -43,16 +43,15 @@ export default defineConfig({
 ## Roadmap
 
 - features
-  - [ ] keep func for unimport/unplugin-auto-import (by
-        https://github1s.com/unjs/unimport/blob/HEAD/src/extract.ts) &
-        ~~dirsScan & writeDtsFile on build~~
-  - [ ] get options/viteConfig in Snippet's methods
+  - [ ] `~mixcode/<scope>/<identifier>?params<suffix>`
+  - [ ] `~mixcode/xxx`, `~mixcode/xxx/index`, `~mixcode/xxx/?xxx`
   - [ ] macro with params
+  - [ ] get options/viteConfig in Snippet's methods
   - [ ] use$
   - [ ] support unimport's addon
 - snippets
+  - [ ] bootstrap
   - [ ] pages (spa/mpa)
-  - [ ] bootstrap `~mixcode/boot | ~mixcode/boot/index | ~mixcode/boot/?xxx`
   - [ ] layout
   - [ ] xstate
   - [ ] Design Patterns

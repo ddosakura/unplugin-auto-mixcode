@@ -1,6 +1,8 @@
 # useXxxDialog
 
-## React
+## QuickStart
+
+### React
 
 ```tsx
 function Example() {
@@ -18,6 +20,6 @@ function Example() {
 }
 ```
 
-## Vue
+### Vue
 
 // TODO: impl vue/useXxxDialog

@@ -3,6 +3,15 @@
     "instanceof": "Map",
     "value": [
       [
+        "index.html",
+        {
+          "instanceof": "Set",
+          "value": [
+            "bootstrap/react"
+          ]
+        }
+      ],
+      [
         "src/App.tsx",
         {
           "instanceof": "Set",
