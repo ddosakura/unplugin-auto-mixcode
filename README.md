@@ -38,19 +38,17 @@ export default defineConfig({
 
 ### Snippets
 
+- [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
 
 ## Roadmap
 
 - features
-  - [ ] `~mixcode/<scope>/<identifier>?params<suffix>`
-  - [ ] `~mixcode/xxx`, `~mixcode/xxx/index`, `~mixcode/xxx/?xxx`
-  - [ ] macro with params
   - [ ] get options/viteConfig in Snippet's methods
+  - [ ] macro with params
   - [ ] use$
   - [ ] support unimport's addon
 - snippets
-  - [ ] bootstrap
   - [ ] pages (spa/mpa)
   - [ ] layout
   - [ ] xstate

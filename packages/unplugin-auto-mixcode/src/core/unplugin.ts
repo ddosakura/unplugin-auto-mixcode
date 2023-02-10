@@ -9,6 +9,7 @@ import {
   checkUnimportPlugn,
   checkVue2Plugin,
   checkVuePlugin,
+  createURI,
   name,
   normalizeStringOption,
   snippetsFromPreset,
@@ -54,21 +55,18 @@ export default createUnplugin<Options>((options = {}) => {
     },
 
     resolveId(id, importer) {
-      if (id === "~mixcode") return "~mixcode.ts";
-      if (importer === "~mixcode.ts") return "~mixcode.ts?blank";
-      const IS_MIXCODE_MODULE =
-        id.startsWith(PREFIX_MIXCODE_SNIPPET) ||
-        id.startsWith(`/${PREFIX_MIXCODE_SNIPPET}`);
-      if (!IS_MIXCODE_MODULE) return;
-      return ctx.resolveId(id, importer);
+      if (id === "~mixcode") return "virtual:mixcode.ts";
+      if (importer === "virtual:mixcode.ts") return "virtual:mixcode";
+
+      const uri = id.replace(/^\/?~mixcode\//, PREFIX_MIXCODE_SNIPPET);
+      if (!uri.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
+      return ctx.resolveId(createURI(uri), importer);
     },
     load(id) {
-      if (id === "~mixcode.ts") return ctx.initScript();
-      if (id === "~mixcode.ts?blank") return ctx.initScript(true);
-      const IS_MIXCODE_MODULE =
-        id.startsWith(PREFIX_MIXCODE_SNIPPET) ||
-        id.startsWith(`/${PREFIX_MIXCODE_SNIPPET}`);
-      if (!IS_MIXCODE_MODULE) return;
+      if (id === "virtual:mixcode.ts") return ctx.initScript();
+      if (id === "virtual:mixcode") return ctx.initScript(true);
+
+      if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
       return ctx.load(id);
     },
 

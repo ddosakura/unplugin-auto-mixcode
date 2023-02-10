@@ -21,7 +21,10 @@ export interface Snippet {
     resolve?(name: string): boolean;
     /** @defaultValue '.ts' */
     suffix?: string;
-    load(id: string): Awaitable<SourceDescription | undefined>;
+    load(
+      id: string,
+      params: Record<string, string>,
+    ): Awaitable<SourceDescription | undefined>;
     dts?(id: string): Awaitable<string>;
   };
   macro?(s: MagicString): void;

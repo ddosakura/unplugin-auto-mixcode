@@ -86,7 +86,7 @@ export const parseSnippets = (
 export const macroRegExp = (name: string) =>
   new RegExp(`\\/\\*\\* @mixcode ${name} \\*\\/`, "g");
 
-export const PREFIX_MIXCODE_SNIPPET = "~mixcode/";
+export const PREFIX_MIXCODE_SNIPPET = "virtual:mixcode/";
 
 export const snippetsFromPreset = (presets: Array<Preset> = []) =>
   presets.reduce(
@@ -169,4 +169,40 @@ export async function readJSONFile<T>(filePath: string) {
     if (!text) return;
     return parse(text) as T;
   } catch {}
+}
+
+export const createURI = (uri: string) => {
+  const url = new URL(uri, "http://localhost");
+  return {
+    get protocol() {
+      return url.protocol;
+    },
+    get pathname() {
+      return url.pathname;
+    },
+    get search() {
+      return url.search;
+    },
+    get params() {
+      return Object.fromEntries(url.searchParams.entries());
+    },
+  };
+};
+
+export type URI = ReturnType<typeof createURI>;
+
+export function stripSuffix(name: string, suffix: string): string {
+  if (suffix.length >= name.length) {
+    return name;
+  }
+
+  const lenDiff = name.length - suffix.length;
+
+  for (let i = suffix.length - 1; i >= 0; --i) {
+    if (name.charCodeAt(lenDiff + i) !== suffix.charCodeAt(i)) {
+      return name;
+    }
+  }
+
+  return name.slice(0, -suffix.length);
 }

@@ -7,7 +7,7 @@
         {
           "instanceof": "Set",
           "value": [
-            "bootstrap/react"
+            "bootstrap/index"
           ]
         }
       ],

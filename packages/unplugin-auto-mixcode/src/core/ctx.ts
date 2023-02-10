@@ -1,5 +1,3 @@
-import { basename, dirname } from "node:path";
-
 import { createFilter } from "@rollup/pluginutils";
 import MagicString from "magic-string";
 
@@ -7,8 +5,11 @@ import { createCacheStore } from "./cache";
 import type { Framework, ParsedOptions, Snippet } from "./types";
 import {
   type SnippetResolver,
+  type URI,
   createSnippetResolver,
+  createURI,
   parseSnippets,
+  stripSuffix,
 } from "./utils";
 
 export class Context {
@@ -65,7 +66,7 @@ export class Context {
     return store.writeConfigFiles();
   }
   #snippetVirtual(id: string) {
-    const snippetType = basename(dirname(id));
+    const [, snippetType] = id.split("/");
     const snippet = this.snippets[snippetType] ?? {};
     const virtual: NonNullable<Snippet["virtual"]> = snippet.virtual ?? {
       load: () => {
@@ -99,15 +100,20 @@ export class Context {
     const store = await this.cacheStore;
     store.updateIdentifier(idWithScope, importer);
   }
-  resolveId(id: string, importer?: string) {
-    const { importerFilter, snippetType, suffix } = this.#snippetVirtual(id);
+  // virtual:mixcode/<scope>/<identifier>?params<suffix>
+  resolveId(uri: URI, importer?: string) {
+    const { importerFilter, snippetType, suffix } = this.#snippetVirtual(
+      uri.pathname,
+    );
+    if (!snippetType) return;
     if (!importerFilter(importer)) return;
-    const parsedId = id.endsWith(suffix) ? id : `${id}${suffix}`;
+    const [prefix, , id = "index"] = uri.pathname.split("/");
     if (importer) {
-      const fn = basename(parsedId, suffix);
+      const fn = stripSuffix(id, suffix);
       this.#updateIdentifier(`${snippetType}/${fn}`, importer);
     }
-    return parsedId;
+    const href = `${uri.protocol}${prefix}/${snippetType}/${id}${uri.search}`;
+    return href.endsWith(suffix) ? href : `${href}${suffix}`;
   }
   async #updateDts(id: string, text: string) {
     const store = await this.cacheStore;
@@ -117,8 +123,9 @@ export class Context {
     const { suffix, load, dts } = this.#snippetVirtual(id);
     if (!load) return;
     if (!id.endsWith(suffix)) return;
-    const fn = basename(id, suffix);
-    const result = await load(fn);
+    const uri = createURI(stripSuffix(id, suffix));
+    const [, , fn] = uri.pathname.split("/");
+    const result = await load(fn, uri.params);
     if (!result) return;
     const dtsText = await dts?.(fn);
     if (dtsText) {

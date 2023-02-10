@@ -21,7 +21,7 @@ export default function(props) {
     dts(id) {
       const componentName = id.replace("use", "");
       return `
-declare module "~mixcode/dialog/${id}" {
+declare module "virtual:mixcode/dialog/${id}" {
   import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
   export default function (
     teleportProps?: TeleportProps,
