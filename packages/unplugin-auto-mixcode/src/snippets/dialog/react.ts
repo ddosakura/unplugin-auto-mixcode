@@ -5,27 +5,29 @@ import { IINJECTED_MIXCODE_DIALOG } from "./common";
 
 // TODO: a-zA-Z_$; prefix use$; suffix Dialog; macro with scope; closable(by abortsignal); autoclose
 export default <Snippet>{
-  suffix: ".tsx",
-  resolve(name) {
-    return /use([A-Z]\w*)Dialog/.test(name);
-  },
-  load(id) {
-    const componentName = id.replace("use", "");
-    return `
+  virtual: {
+    suffix: ".tsx",
+    resolve(name) {
+      return /use([A-Z]\w*)Dialog/.test(name);
+    },
+    load(id) {
+      const componentName = id.replace("use", "");
+      return `
 import { usePromisifyDialog } from "@mixcode/glue-react";
 export default function(props) {
   return usePromisifyDialog(${componentName}, props);
 }`;
-  },
-  dts(id) {
-    const componentName = id.replace("use", "");
-    return `
+    },
+    dts(id) {
+      const componentName = id.replace("use", "");
+      return `
 declare module "~mixcode/dialog/${id}" {
   import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
   export default function (
     teleportProps?: TeleportProps,
   ): OpenPromisifyDialog<typeof ${componentName}>;
 }`;
+    },
   },
   macro(s) {
     let counter = 0;

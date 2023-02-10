@@ -81,11 +81,13 @@ importers:
     specifiers:
       '@antfu/utils': ^0.7.2
       '@rollup/pluginutils': ^5.0.2
+      local-pkg: ^0.4.3
       magic-string: ^0.27.0
       unplugin: ^1.0.1
     dependencies:
       '@antfu/utils': 0.7.2
       '@rollup/pluginutils': 5.0.2
+      local-pkg: 0.4.3
       magic-string: 0.27.0
       unplugin: 1.0.1
 
@@ -2831,7 +2833,6 @@ packages:
   /local-pkg/0.4.3:
     resolution: {integrity: sha512-SFppqq5p42fe2qcZQqqEOiVRXl+WCP1MdT6k7BDEW1j++sp5fIY+/fdRQitvKgB5BrBcmrs5m/L0v2FrU5MY1g==}
     engines: {node: '>=14'}
-    dev: true
 
   /locate-path/5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}

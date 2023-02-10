@@ -13,10 +13,17 @@ type SourceDescription = Exclude<
 >;
 
 export interface Snippet {
-  suffix: string;
-  resolve(name: string): boolean;
-  load(id: string): Awaitable<SourceDescription>;
-  dts(id: string): Awaitable<string>;
+  importer?: {
+    include?: FilterPattern;
+    exclude?: FilterPattern;
+  };
+  virtual?: {
+    resolve?(name: string): boolean;
+    /** @defaultValue '.ts' */
+    suffix?: string;
+    load(id: string): Awaitable<SourceDescription | undefined>;
+    dts?(id: string): Awaitable<string>;
+  };
   macro?(s: MagicString): void;
 }
 
@@ -34,6 +41,9 @@ export interface Options extends Preset {
 
   root?: string;
 
+  /** @default './mixcode.json' */
+  cache?: boolean | string;
+
   /** @default './auto-mixcode.d.ts' */
   dts?: boolean | string;
 
@@ -45,6 +55,7 @@ export interface Options extends Preset {
 
 export interface ParsedOptions extends Required<Preset> {
   root: string;
-  dts: string;
+  cache: string | false;
+  dts: string | false;
   framework: Framework;
 }

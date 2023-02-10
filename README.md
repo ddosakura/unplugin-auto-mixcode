@@ -1,5 +1,8 @@
 # unplugin-auto-mixcode
 
+Enhanced plug-in based in `unimport/unplugin-auto-import`, with opinionated
+programming paradigm.
+
 - https://github.com/unjs/unplugin
 - https://github.com/unjs/unimport
 - https://github.com/antfu/unplugin-auto-import
@@ -40,7 +43,9 @@ export default defineConfig({
 ## Roadmap
 
 - features
-  - [ ] keep func for unplugin-auto-import & dirsScan & writeDtsFile on build
+  - [ ] keep func for unimport/unplugin-auto-import (by
+        https://github1s.com/unjs/unimport/blob/HEAD/src/extract.ts) &
+        ~~dirsScan & writeDtsFile on build~~
   - [ ] get options/viteConfig in Snippet's methods
   - [ ] macro with params
   - [ ] use$
@@ -51,7 +56,11 @@ export default defineConfig({
   - [ ] layout
   - [ ] xstate
   - [ ] Design Patterns
+  - [ ] query (swr/useReactQuery)
+  - [ ] `@mixcode/run/...`
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-vue
   - [ ] glue-vue2
+  - [ ] glue-solid
+  - [ ] glue-svelte

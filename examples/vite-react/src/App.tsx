@@ -1,5 +1,8 @@
 import "./App.css";
 import reactLogo from "./assets/react.svg";
+import { Suspense } from "react";
+
+const DynamicExample = lazy(() => import("./dynamic"));
 
 function Example() {
   const [disabled, setDisabled] = useState(false);
@@ -14,7 +17,6 @@ function Example() {
     const resp = await open({ name });
     resp && setName(resp.name);
   };
-  const hello = useHelloWorldDialog();
   return (
     <>
       <span>{name}</span>
@@ -22,12 +24,12 @@ function Example() {
       <button onClick={() => setDisabled((disabled) => !disabled)}>
         switch
       </button>
-      <button onClick={hello}>hello</button>
       {/** @mixcode dialog */}
     </>
   );
 }
 
+/** @mixcode foo */
 function App() {
   const [count, setCount] = useState(0);
 
@@ -60,6 +62,13 @@ function App() {
       </p>
       <Example />
       <Example />
+      {count > 5
+        ? (
+          <Suspense fallback={<span>loading...</span>}>
+            <DynamicExample />
+          </Suspense>
+        )
+        : <></>}
       {/** @mixcode dialog */}
     </div>
   );

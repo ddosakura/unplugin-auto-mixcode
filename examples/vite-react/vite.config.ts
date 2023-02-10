@@ -5,12 +5,19 @@ import UnoCSS from "unocss/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Inspect from "vite-plugin-inspect";
 
-import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
+import { macroRegExp, presetRecommend } from "@mixcode/unplugin-auto-mixcode";
 import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
 const mixcode = AutoMixcode({
   dts: "src/auto-mixcode.d.ts",
   presets: [presetRecommend],
+  snippets: {
+    foo: {
+      macro(s) {
+        s.replace(macroRegExp("foo"), 'import "~mixcode/foo/bar"');
+      },
+    },
+  },
 });
 
 // https://vitejs.dev/config/

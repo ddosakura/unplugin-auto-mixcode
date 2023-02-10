@@ -17,6 +17,9 @@ import type {
 
 export const name = "unplugin-auto-mixcode";
 
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const warn = (...args: any[]) => console.warn(`[${name}]`, ...args);
+
 type ConfigResolvedFn = UnwrapObjectHook<
   NonNullable<VitePlugin["configResolved"]>
 >;
@@ -26,9 +29,7 @@ export function checkUnimportPlugn(config: Parameters<ConfigResolvedFn>[0]) {
     ["unimport", "unplugin-auto-import"].includes(p.name),
   );
   if (!plugin) {
-    console.warn(
-      `[${name}] recommend to work with unimport/unplugin-auto-import`,
-    );
+    warn("recommend to work with unimport/unplugin-auto-import");
   }
   return plugin;
 }
@@ -53,9 +54,18 @@ export function checkSveltePlugin(_config: Parameters<ConfigResolvedFn>[0]) {
   throw new Error("Method not implemented.");
 }
 
+export const normalizeStringOption = (
+  value: boolean | string,
+  defaultValue: string,
+) => (value === true ? defaultValue : value);
+
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const isFrameworkSnippet = (snippet: any): snippet is FrameworkSnippet =>
-  !snippet.load;
+  snippet.react ||
+  snippet.vue ||
+  snippet.vue2 ||
+  snippet.solid ||
+  snippet.svelte;
 
 const getSnippets = (
   snippet: Snippet | FrameworkSnippet,
@@ -88,7 +98,7 @@ export const createSnippetResolver = (snippets: Record<string, Snippet>) => {
   const list = Object.entries(snippets);
   return (name: string) => {
     const result = list.find(([, snippet]) =>
-      snippet.resolve(name) ? snippet : undefined,
+      snippet.virtual?.resolve?.(name) ? snippet : undefined,
     );
     return result
       ? {
@@ -113,15 +123,48 @@ export async function readFile(filePath: string) {
   } catch {}
 }
 
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
-export function writeJSONFile(filePath: string, data: any) {
-  return writeFile(filePath, JSON.stringify(data, null, 2));
-}
+export const stringify = (
+  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  value: any,
+  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  replacer = (_key: string, value: any) => {
+    if (value instanceof Map) {
+      return {
+        instanceof: "Map",
+        value: Array.from(value.entries()),
+      };
+    }
+    if (value instanceof Set) {
+      return {
+        instanceof: "Set",
+        value: Array.from(value.values()),
+      };
+    }
+    return value;
+  },
+  space?: string | number,
+) => JSON.stringify(value, replacer, space);
+
+export const parse = (
+  text: string,
+  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+  reviver = (_key: string, value: any) => {
+    if (typeof value === "object" && value !== null) {
+      if (value.instanceof === "Map") {
+        return new Map(value.value);
+      }
+      if (value.instanceof === "Set") {
+        return new Set(value.value);
+      }
+    }
+    return value;
+  },
+) => JSON.parse(text, reviver);
 
 export async function readJSONFile<T>(filePath: string) {
   try {
     const text = await readFile(filePath);
     if (!text) return;
-    return JSON.parse(text) as T;
+    return parse(text) as T;
   } catch {}
 }

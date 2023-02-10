@@ -1,6 +1,5 @@
-import { basename, dirname } from "node:path";
-
 import { createFilter } from "@rollup/pluginutils";
+import { isPackageExists } from "local-pkg";
 import { createUnplugin } from "unplugin";
 
 import { Context } from "./ctx";
@@ -11,6 +10,7 @@ import {
   checkVue2Plugin,
   checkVuePlugin,
   name,
+  normalizeStringOption,
   snippetsFromPreset,
 } from "./utils";
 
@@ -21,15 +21,16 @@ export default createUnplugin<Options>((options = {}) => {
   );
 
   const {
-    dts: rawDts,
+    cache: rawCache = true,
+    dts: rawDts = isPackageExists("typescript"),
     framework = "react",
     presets = [],
     snippets = {},
   } = options;
-  const dts = rawDts === true ? "./auto-mixcode.d.ts" : rawDts;
   const ctx: Context = new Context({
     root: process.cwd(),
-    dts: dts ? dts : "",
+    cache: normalizeStringOption(rawCache, "./mixcode.json"),
+    dts: normalizeStringOption(rawDts, "./auto-mixcode.d.ts"),
     framework,
     snippets: {
       ...snippetsFromPreset(presets),
@@ -52,37 +53,21 @@ export default createUnplugin<Options>((options = {}) => {
       return ctx.transform(code, id);
     },
 
-    resolveId(source, _importer) {
-      if (!source.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
-      const snippetType = basename(dirname(source));
-      const { suffix = "" } = ctx.snippets[snippetType] ?? {};
-      if (!suffix) return;
-      return source.endsWith(suffix) ? source : `${source}${suffix}`;
-    },
-    async load(id) {
+    resolveId(id, importer) {
       if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
-      const snippetType = basename(dirname(id));
-      const { suffix = "", load, dts } = ctx.snippets[snippetType] ?? {};
-      if (!load) return;
-      const fn = basename(id, suffix);
-      const result = await load(fn);
-      ctx.updateDts(id, await dts(fn));
-      return typeof result === "string"
-        ? {
-            map: { mappings: "" },
-            code: result,
-          }
-        : result;
+      return ctx.resolveId(id, importer);
+    },
+    load(id) {
+      if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
+      return ctx.load(id);
     },
 
-    /*
     async buildStart() {
-      await ctx.scanDirs()
+      await ctx.cacheStore;
     },
     async buildEnd() {
-      await ctx.writeDtsFile()
+      await ctx.writeConfigFiles();
     },
-    */
 
     vite: {
       configResolved(config) {
@@ -90,6 +75,9 @@ export default createUnplugin<Options>((options = {}) => {
 
         if (options.root) {
           ctx.setRoot(options.root);
+        }
+        if (config.command === "serve") {
+          ctx.devMode = true;
         }
 
         if (!options.framework) {
@@ -101,11 +89,9 @@ export default createUnplugin<Options>((options = {}) => {
           }
         }
       },
-      /*
       async handleHotUpdate({ file }) {
-        console.log("[hook handleHotUpdate]", file);
+        ctx.updateCacheImports(file);
       },
-      */
     },
   };
 });

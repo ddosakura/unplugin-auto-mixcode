@@ -1,0 +1,26 @@
+{
+  "imports": {
+    "instanceof": "Map",
+    "value": [
+      [
+        "src/App.tsx",
+        {
+          "instanceof": "Set",
+          "value": [
+            "dialog/useExampleDialog",
+            "foo/bar"
+          ]
+        }
+      ],
+      [
+        "src/dynamic.tsx",
+        {
+          "instanceof": "Set",
+          "value": [
+            "dialog/useHelloWorldDialog"
+          ]
+        }
+      ]
+    ]
+  }
+}
