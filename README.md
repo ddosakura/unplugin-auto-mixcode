@@ -46,6 +46,8 @@ export default defineConfig({
 
 - features
   - [ ] get options/viteConfig in Snippet's methods
+    - auto choose bootstrap framework
+    - custom dialog snippet's prefix/suffix
   - [ ] support unimport's addon
 - snippets
   - [ ] pages (spa/mpa)

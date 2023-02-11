@@ -1,7 +1,9 @@
-export const HelloWorldDialog: React.FC = () => {
+export const HelloWorldDialog: React.FC<{ text?: string }> = (
+  { text = "Hello World!" },
+) => {
   return (
     <div>
-      <span>Hello World!</span>
+      <span>{text}</span>
     </div>
   );
 };

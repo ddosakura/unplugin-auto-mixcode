@@ -32,7 +32,6 @@ function firstInject(s: MagicString) {
   return scopes;
 }
 
-// TODO: custom prefix/suffix; closable(by abortsignal); autoclose
 export default <Snippet>{
   // ~mixcode/dialog/useXxxDialog
   virtual: {
