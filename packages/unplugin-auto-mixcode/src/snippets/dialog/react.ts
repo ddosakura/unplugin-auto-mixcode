@@ -42,21 +42,11 @@ export default <Snippet>{
     },
     load(id) {
       const componentName = id.replace(PREFIX, "");
-      return `
-import { usePromisifyDialog } from "@mixcode/glue-react";
-export default function(props) {
-  return usePromisifyDialog(${componentName}, props);
-}`;
+      return tplSource(componentName);
     },
     dts(id) {
       const componentName = id.replace(PREFIX, "");
-      return `
-declare module "virtual:mixcode/dialog/${id}" {
-  import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
-  export default function (
-    teleportProps?: TeleportProps,
-  ): OpenPromisifyDialog<typeof ${componentName}>;
-}`;
+      return tplDts(componentName);
     },
   },
   /** @mixcode dialog */
@@ -77,3 +67,17 @@ declare module "virtual:mixcode/dialog/${id}" {
     };
   },
 };
+
+const tplSource = (componentName: string) => `
+import { usePromisifyDialog } from "@mixcode/glue-react";
+export default function(props) {
+  return usePromisifyDialog(${componentName}, props);
+}
+`;
+
+const tplDts = (componentName: string) => `{
+  import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
+  export default function (
+    teleportProps?: TeleportProps,
+  ): OpenPromisifyDialog<typeof ${componentName}>;
+}`;

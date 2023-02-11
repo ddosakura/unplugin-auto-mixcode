@@ -12,6 +12,25 @@ import {
   stripSuffix,
 } from "./utils";
 
+type DtsFn = NonNullable<NonNullable<Snippet["virtual"]>["dts"]>;
+
+const DECLARE_VIRTUAL_MODULE = 'declare module "virtual:mixcode';
+
+const wrapDtsFn =
+  (scope: string, fn: DtsFn): DtsFn =>
+  async (id) => {
+    const raw = await fn(id);
+    if (raw.startsWith("{") && raw.endsWith("}")) {
+      return `\n${DECLARE_VIRTUAL_MODULE}/${scope}/${id}" ${raw}\n`;
+    }
+    const code = raw
+      .split("\n")
+      .map((line) => (line ? `  ${line}` : ""))
+      .filter(Boolean)
+      .join("\n");
+    return `\n${DECLARE_VIRTUAL_MODULE}/${scope}/${id}" {\n${code}\n}\n`;
+  };
+
 export class Context {
   constructor(private options: ParsedOptions, public devMode = false) {
     this.setFramework(options.framework);
@@ -19,6 +38,11 @@ export class Context {
   setFramework(framework: Framework) {
     this.options.framework = framework;
     const snippets = parseSnippets(framework, this.options.snippets);
+    Object.entries(snippets).forEach(([scope, snippet]) => {
+      if (snippet.virtual?.dts) {
+        snippet.virtual.dts = wrapDtsFn(scope, snippet.virtual.dts);
+      }
+    });
     this.#snippets = snippets;
     this.#resolver = createSnippetResolver(snippets);
     this.#macro = Object.entries(snippets)
