@@ -5,7 +5,7 @@ import UnoCSS from "unocss/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Inspect from "vite-plugin-inspect";
 
-import { macroRegExp, presetRecommend } from "@mixcode/unplugin-auto-mixcode";
+import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
 import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
 const mixcode = AutoMixcode({
@@ -13,8 +13,8 @@ const mixcode = AutoMixcode({
   presets: [presetRecommend],
   snippets: {
     foo: {
-      macro(s) {
-        s.replace(macroRegExp("foo"), 'import "~mixcode/foo/bar"');
+      macro() {
+        return 'import "~mixcode/foo/bar"';
       },
     },
   },

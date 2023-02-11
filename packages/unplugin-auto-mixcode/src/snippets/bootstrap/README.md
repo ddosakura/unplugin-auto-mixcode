@@ -1,4 +1,4 @@
-# `~mixcode/bootstrap(/<framework>)?`
+# Bootstrap Snippet
 
 ## QuickStart
 

@@ -27,7 +27,11 @@ export interface Snippet {
     ): Awaitable<SourceDescription | undefined>;
     dts?(id: string): Awaitable<string>;
   };
-  macro?(s: MagicString): void;
+  macro?<T>(
+    params: Record<string, string>,
+    s: MagicString,
+    context?: T,
+  ): string | { code: string; context: T };
 }
 
 export type Framework = "react" | "vue" | "vue2";

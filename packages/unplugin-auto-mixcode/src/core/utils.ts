@@ -82,10 +82,6 @@ export const parseSnippets = (
   return Object.fromEntries(entries);
 };
 
-/** e.g. /** @mixcode \<macro_name> *\/ */
-export const macroRegExp = (name: string) =>
-  new RegExp(`\\/\\*\\* @mixcode ${name} \\*\\/`, "g");
-
 export const PREFIX_MIXCODE_SNIPPET = "virtual:mixcode/";
 
 export const snippetsFromPreset = (presets: Array<Preset> = []) =>

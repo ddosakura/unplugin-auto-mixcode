@@ -1,10 +1,10 @@
 import type { Snippet } from "@/core/types";
-import { macroRegExp } from "@/core/utils";
 
 import { IINJECTED_MIXCODE_DIALOG } from "./common";
 
 // TODO: a-zA-Z_$; prefix use$; suffix Dialog; macro with scope; closable(by abortsignal); autoclose
 export default <Snippet>{
+  // ~mixcode/dialog/useXxxDialog
   virtual: {
     suffix: ".tsx",
     resolve(name) {
@@ -29,7 +29,11 @@ declare module "virtual:mixcode/dialog/${id}" {
 }`;
     },
   },
-  macro(s) {
+  /** @mixcode dialog */
+  macro(_params, s, context) {
+    if (context) {
+      return { code: context, context };
+    }
     let counter = 0;
     s.replace(
       new RegExp("([a-zA-Z_]\\w*) = use([A-Z]\\w*)Dialog\\(", "g"),
@@ -43,7 +47,10 @@ declare module "virtual:mixcode/dialog/${id}" {
         return `typeof ${dialog} === 'undefined' ? null : ${dialog}`;
       })
       .join("}{");
-    s.replace(macroRegExp("dialog"), `${dialogs}`);
-    return s;
+    const ctx = `${dialogs}`;
+    return {
+      code: ctx,
+      context: ctx,
+    };
   },
 };

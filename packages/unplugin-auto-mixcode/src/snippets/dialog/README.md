@@ -1,4 +1,4 @@
-# useXxxDialog
+# Dialog Snippet
 
 ## QuickStart
 

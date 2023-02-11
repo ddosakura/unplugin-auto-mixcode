@@ -40,12 +40,12 @@ export default defineConfig({
 
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
+- [run](./packages/unplugin-auto-mixcode/src/snippets/run/README.md)
 
 ## Roadmap
 
 - features
   - [ ] get options/viteConfig in Snippet's methods
-  - [ ] macro with params
   - [ ] use$
   - [ ] support unimport's addon
 - snippets
@@ -54,7 +54,6 @@ export default defineConfig({
   - [ ] xstate
   - [ ] Design Patterns
   - [ ] query (swr/useReactQuery)
-  - [ ] `@mixcode/run/...`
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-vue

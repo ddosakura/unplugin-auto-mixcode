@@ -21,8 +21,11 @@ export class Context {
     const snippets = parseSnippets(framework, this.options.snippets);
     this.#snippets = snippets;
     this.#resolver = createSnippetResolver(snippets);
-    this.#macro = Object.values(snippets)
-      .map(({ macro }) => macro!)
+    this.#macro = Object.entries(snippets)
+      .map(([name, { macro }]) => {
+        // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+        return (macro ? [name, macro!] : undefined) as any;
+      })
       .filter(Boolean);
   }
   setRoot(root: string) {
@@ -39,10 +42,31 @@ export class Context {
     return this.#resolver?.(name);
   }
 
-  #macro: Array<(s: MagicString) => void> = [];
+  #macro: Array<[string, NonNullable<Snippet["macro"]>]> = [];
   async transform(code: string, id: string) {
     const s = new MagicString(code);
-    this.#macro.forEach((macro) => macro(s));
+    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const contexts = new Map<string, any>();
+    s.replace(/\/\*\*([\s\S]*?)\*\//g, (_$0: string, $1: string) => {
+      const snippets: string[] = [];
+      this.#macro.reduce(($1, [name, macro]) => {
+        const re = new RegExp(`@mixcode ${name}(\\?[^\\s]+)?`, "g");
+        return $1.replace(re, (_$0: string, $1: string) => {
+          const uri = createURI($1);
+          const ctx = contexts.get(name);
+          const result = macro(uri.params, s, ctx);
+          if (!result) return "";
+          const { code, context } =
+            typeof result === "string"
+              ? { code: result, context: null }
+              : result;
+          if (typeof code === "string") snippets.push(code);
+          contexts.set(name, context ?? ctx);
+          return "";
+        });
+      }, $1);
+      return snippets.length === 0 ? `/**${$1}*/` : snippets.join("\n");
+    });
     if (!s.hasChanged()) return;
     return {
       code: s.toString(),

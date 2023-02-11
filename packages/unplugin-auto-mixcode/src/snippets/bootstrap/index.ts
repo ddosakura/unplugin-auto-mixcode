@@ -1,10 +1,10 @@
 import type { Snippet } from "@/core/types";
 
-/** ~mixcode/bootstrap(/\<framework>)? */
 export const bootstrap: Snippet = {
   // support to import from .html
   importer: { exclude: [] },
 
+  // `~mixcode/bootstrap(/<framework>)?`
   virtual: {
     suffix: ".tsx",
     load(framework, { unocss, import: importScript }) {

@@ -24,12 +24,15 @@ function Example() {
       <button onClick={() => setDisabled((disabled) => !disabled)}>
         switch
       </button>
-      {/** @mixcode dialog */}
+      {/** @mixcode dialog?0 */}
     </>
   );
 }
 
-/** @mixcode foo */
+/**
+ * @mixcode foo
+ * @mixcode run?js=new+Date%28%29
+ */
 function App() {
   const [count, setCount] = useState(0);
 
@@ -39,6 +42,9 @@ function App() {
     <div className="App color-gray">
       <div className="flex">
         <span className="i-mdi:react text-size-[144px] color-cyan" />
+      </div>
+      <div>
+        {/** @mixcode run?js=new+Date%28%29 */}
       </div>
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
@@ -69,7 +75,7 @@ function App() {
           </Suspense>
         )
         : <></>}
-      {/** @mixcode dialog */}
+      {/** @mixcode dialog?1 */}
     </div>
   );
 }
