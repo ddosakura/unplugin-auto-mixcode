@@ -1,17 +1,47 @@
+import type MagicString from "magic-string";
+
 import type { Snippet } from "@/core/types";
 
-import { IINJECTED_MIXCODE_DIALOG } from "./common";
+import { INJECTED_DIALOG } from "./common";
 
-// TODO: a-zA-Z_$; prefix use$; suffix Dialog; macro with scope; closable(by abortsignal); autoclose
+const PREFIX = "use$";
+
+const PREFIX4RE = "use\\$";
+
+const SUFFIX = "Dialog";
+
+//                                   | scope    |
+const RE_OPEN_FUNC = "([a-zA-Z_]\\w*)(\\$[0-9]+)?";
+
+function firstInject(s: MagicString) {
+  let counter = 0;
+  const scopes: Record<string, Set<string>> = {};
+  s.replace(
+    new RegExp(`${RE_OPEN_FUNC} = ${PREFIX4RE}([A-Z]\\w*)${SUFFIX}\\(`, "g"),
+    (_$0, $1, $scope, $3) => {
+      const index = counter++;
+      const s = $scope ? $scope.slice(1) : "_";
+      if (!scopes[s]) scopes[s] = new Set();
+      const dialog = `${INJECTED_DIALOG}${index}`;
+      scopes[s].add(`typeof ${dialog} === 'undefined' ? null : ${dialog}`);
+      const fn = `${$1}${$scope ? $scope : ""}`;
+      return `[${INJECTED_DIALOG}${index}, ${fn}] = ${PREFIX}${$3}${SUFFIX}(`;
+    },
+  );
+  if (counter === 0) return;
+  return scopes;
+}
+
+// TODO: custom prefix/suffix; closable(by abortsignal); autoclose
 export default <Snippet>{
   // ~mixcode/dialog/useXxxDialog
   virtual: {
     suffix: ".tsx",
     resolve(name) {
-      return /use([A-Z]\w*)Dialog/.test(name);
+      return new RegExp(`${PREFIX4RE}([A-Z]\\w*)${SUFFIX}`).test(name);
     },
     load(id) {
-      const componentName = id.replace("use", "");
+      const componentName = id.replace(PREFIX, "");
       return `
 import { usePromisifyDialog } from "@mixcode/glue-react";
 export default function(props) {
@@ -19,7 +49,7 @@ export default function(props) {
 }`;
     },
     dts(id) {
-      const componentName = id.replace("use", "");
+      const componentName = id.replace(PREFIX, "");
       return `
 declare module "virtual:mixcode/dialog/${id}" {
   import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
@@ -30,27 +60,20 @@ declare module "virtual:mixcode/dialog/${id}" {
     },
   },
   /** @mixcode dialog */
-  macro(_params, s, context) {
-    if (context) {
-      return { code: context, context };
-    }
-    let counter = 0;
-    s.replace(
-      new RegExp("([a-zA-Z_]\\w*) = use([A-Z]\\w*)Dialog\\(", "g"),
-      (_$0, $1, $2) =>
-        `[${IINJECTED_MIXCODE_DIALOG}${counter++}, ${$1}] = use${$2}Dialog(`,
-    );
-    if (counter === 0) return;
-    const dialogs = Array.from({ length: counter })
-      .map((_, index) => {
-        const dialog = `${IINJECTED_MIXCODE_DIALOG}${index}`;
-        return `typeof ${dialog} === 'undefined' ? null : ${dialog}`;
-      })
-      .join("}{");
-    const ctx = `${dialogs}`;
+  macro(params, s, context?: Record<string, Set<string>>) {
+    const scopes = context ?? firstInject(s);
+    if (!scopes) return;
+    const entries = Object.entries(scopes);
+    const keys = Object.keys(params);
+    const sets =
+      keys.length === 0
+        ? entries
+        : entries.filter(([key]) => key === "_" || keys.includes(key));
+    const dialogs = sets.flatMap(([, s]) => Array.from(s.values()));
+    const code = `${dialogs.join("}{")}`;
     return {
-      code: ctx,
-      context: ctx,
+      code,
+      context: scopes,
     };
   },
 };

@@ -16,7 +16,7 @@
         {
           "instanceof": "Set",
           "value": [
-            "dialog/useExampleDialog",
+            "dialog/use$ExampleDialog",
             "foo/bar"
           ]
         }
@@ -26,7 +26,7 @@
         {
           "instanceof": "Set",
           "value": [
-            "dialog/useHelloWorldDialog"
+            "dialog/use$HelloWorldDialog"
           ]
         }
       ]

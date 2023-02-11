@@ -31,7 +31,7 @@ export interface Snippet {
     params: Record<string, string>,
     s: MagicString,
     context?: T,
-  ): string | { code: string; context: T };
+  ): undefined | string | { code: string; context: T };
 }
 
 export type Framework = "react" | "vue" | "vue2";

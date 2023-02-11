@@ -1,5 +1,5 @@
 export default function DynamicExample() {
-  const hello = useHelloWorldDialog();
+  const hello = use$HelloWorldDialog();
   return (
     <div>
       <button onClick={hello}>hello</button>

@@ -9,12 +9,12 @@ function Example() {
   // const [dialog, open] = usePromisifyDialog(ExampleDialog, {
   //   disabled,
   // });
-  const open = useExampleDialog({
+  const open$0 = use$ExampleDialog({
     disabled,
   });
   const [name, setName] = useState("");
   const handleClick = async () => {
-    const resp = await open({ name });
+    const resp = await open$0({ name });
     resp && setName(resp.name);
   };
   return (
@@ -36,7 +36,8 @@ function Example() {
 function App() {
   const [count, setCount] = useState(0);
 
-  // const _open = useExampleDialog();
+  // const _open = use$ExampleDialog();
+  // const _open$1 = use$ExampleDialog();
 
   return (
     <div className="App color-gray">
@@ -76,6 +77,9 @@ function App() {
         )
         : <></>}
       {/** @mixcode dialog?1 */}
+      {/** @mixcode dialog */}
+      {/** @mixcode dialog?_ */}
+      {/** @mixcode dialog?0&1 */}
     </div>
   );
 }
