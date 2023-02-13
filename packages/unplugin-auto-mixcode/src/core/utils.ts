@@ -70,15 +70,21 @@ export const isFrameworkSnippet = (snippet: any): snippet is FrameworkSnippet =>
 const getSnippets = (
   snippet: Snippet | FrameworkSnippet,
   framework: Framework,
-): Snippet => (isFrameworkSnippet(snippet) ? snippet[framework] : snippet);
+): Snippet | undefined =>
+  isFrameworkSnippet(snippet) ? snippet[framework] : snippet;
 
 export const parseSnippets = (
   framework: Framework,
   snippets: Record<string, Snippet | FrameworkSnippet> = {},
 ): Record<string, Snippet> => {
-  const entries = Object.entries(snippets).map(
-    ([name, snippet]) => [name, getSnippets(snippet, framework)] as const,
-  );
+  const entries = Object.entries(snippets)
+    .map(([name, snippet]) => {
+      const s = getSnippets(snippet, framework);
+      return s
+        ? ([name, s] as const)
+        : (undefined as unknown as [string, Snippet]);
+    })
+    .filter(Boolean);
   return Object.fromEntries(entries);
 };
 

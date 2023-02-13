@@ -2,7 +2,7 @@ import { join, relative, resolve } from "node:path";
 
 import { throttle } from "@antfu/utils";
 
-import type { Snippet } from "./types";
+import type { Snippet, SnippetContext } from "./types";
 import { readFile, readJSONFile, stringify, writeFile } from "./utils";
 
 type SourceFile = string;
@@ -66,6 +66,7 @@ export interface CreateCacheStoreOptions {
   cache: string | false;
   dts: string | false;
   snippets: Record<string, Snippet>;
+  snippetContext: SnippetContext;
 }
 
 export const createCacheStore = async (options: CreateCacheStoreOptions) => {
@@ -86,7 +87,7 @@ export const createCacheStore = async (options: CreateCacheStoreOptions) => {
   const identifiers = getIdentifiers(cacheObject);
   const ps = identifiers.map(async ([scope, id]) => {
     const dts = snippets[scope]?.virtual?.dts;
-    const text = await dts?.(id);
+    const text = await dts?.call(options.snippetContext, id);
     if (text) dtsCache.set(id, text);
   });
   await Promise.all(ps);

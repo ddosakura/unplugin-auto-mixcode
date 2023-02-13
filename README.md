@@ -36,18 +36,19 @@ export default defineConfig({
 
 - [Opt-out Auto Import](https://github.com/unjs/unimport#opt-out-auto-import)
 
-### Snippets
+### Snippets (with Snippet's Roadmap)
 
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
+  - [ ] router
+  - [ ] store
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
+  - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
+  - [ ] custom dialog snippet's prefix/suffix
 - [run](./packages/unplugin-auto-mixcode/src/snippets/run/README.md)
 
 ## Roadmap
 
 - features
-  - [ ] get options/viteConfig in Snippet's methods
-    - auto choose bootstrap framework
-    - custom dialog snippet's prefix/suffix
   - [ ] support unimport's addon
 - snippets
   - [ ] pages (spa/mpa)

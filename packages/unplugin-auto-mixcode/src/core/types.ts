@@ -12,22 +12,54 @@ type SourceDescription = Exclude<
   void | null | undefined
 >;
 
+export interface SnippetContext {
+  readonly framework: Framework;
+}
+
+interface ImporterPattern {
+  include?: FilterPattern;
+  exclude?: FilterPattern;
+}
+
+/**
+ * whole process:
+ *
+ * 1. transform virtual module api by macro
+ *  `e.g. useXxxDialog`
+ * 2. resolve virtual module by unimport/unplugin-auto-import
+ *  `e.g. import useXxxDialog from 'virtual:mixcode/dialog/useXxxDialog'`
+ * 3. load virtual module with dts
+ *
+ * or
+ *
+ * 1. import virtual module by macro
+ *  `e.g. import 'virtual:mixcode/...'`
+ * 2. load virtual module
+ */
 export interface Snippet {
-  importer?: {
-    include?: FilterPattern;
-    exclude?: FilterPattern;
-  };
+  importer?:
+    | ImporterPattern
+    | ((this: SnippetContext) => ImporterPattern | undefined);
   virtual?: {
+    /** for createSnippetResolver used by unplugin-auto-import */
     resolve?(name: string): boolean;
-    /** @defaultValue '.ts' */
-    suffix?: string;
+    /**
+     * for build tool to match other plugin
+     *
+     * @defaultValue '.ts'
+     **/
+    suffix?: string | ((this: SnippetContext) => string | undefined);
+    /** virtual module loader */
     load(
+      this: SnippetContext,
       id: string,
       params: Record<string, string>,
     ): Awaitable<SourceDescription | undefined>;
-    dts?(id: string): Awaitable<string>;
+    /** virtual module's dts */
+    dts?(this: SnippetContext, id: string): Awaitable<string>;
   };
   macro?<T>(
+    this: SnippetContext,
     params: Record<string, string>,
     s: MagicString,
     context?: T,
@@ -36,7 +68,7 @@ export interface Snippet {
 
 export type Framework = "react" | "vue" | "vue2";
 
-export type FrameworkSnippet = Record<Framework, Snippet>;
+export type FrameworkSnippet = Partial<Record<Framework, Snippet>>;
 
 export interface Preset {
   snippets?: Record<string, Snippet | FrameworkSnippet>;

@@ -2,7 +2,12 @@ import { createFilter } from "@rollup/pluginutils";
 import MagicString from "magic-string";
 
 import { createCacheStore } from "./cache";
-import type { Framework, ParsedOptions, Snippet } from "./types";
+import type {
+  Framework,
+  ParsedOptions,
+  Snippet,
+  SnippetContext,
+} from "./types";
 import {
   type SnippetResolver,
   type URI,
@@ -16,10 +21,9 @@ type DtsFn = NonNullable<NonNullable<Snippet["virtual"]>["dts"]>;
 
 const DECLARE_VIRTUAL_MODULE = 'declare module "virtual:mixcode';
 
-const wrapDtsFn =
-  (scope: string, fn: DtsFn): DtsFn =>
-  async (id) => {
-    const raw = await fn(id);
+const wrapDtsFn = (scope: string, fn: DtsFn): DtsFn =>
+  async function (this: SnippetContext, id: string) {
+    const raw = await fn.call(this, id);
     if (raw.startsWith("{") && raw.endsWith("}")) {
       return `\n${DECLARE_VIRTUAL_MODULE}/${scope}/${id}" ${raw}\n`;
     }
@@ -66,6 +70,12 @@ export class Context {
     return this.#resolver?.(name);
   }
 
+  get snippetContext(): SnippetContext {
+    return {
+      framework: this.options.framework,
+    };
+  }
+
   #macro: Array<[string, NonNullable<Snippet["macro"]>]> = [];
   async transform(code: string, id: string) {
     const s = new MagicString(code);
@@ -78,7 +88,7 @@ export class Context {
         return $1.replace(re, (_$0: string, $1: string) => {
           const uri = createURI($1);
           const ctx = contexts.get(name);
-          const result = macro(uri.params, s, ctx);
+          const result = macro.call(this.snippetContext, uri.params, s, ctx);
           if (!result) return "";
           const { code, context } =
             typeof result === "string"
@@ -106,6 +116,7 @@ export class Context {
       cache: this.options.cache,
       dts: this.options.dts,
       snippets: this.snippets,
+      snippetContext: this.snippetContext,
     });
     return this.#cacheStore;
   }
@@ -116,28 +127,39 @@ export class Context {
   #snippetVirtual(id: string) {
     const [, snippetType] = id.split("/");
     const snippet = this.snippets[snippetType] ?? {};
-    const virtual: NonNullable<Snippet["virtual"]> = snippet.virtual ?? {
-      load: () => {
-        return {
-          map: { mappings: "" as const },
-          code: this.devMode
-            ? `console.warn('[mixcode]', ${JSON.stringify(id)}, 'not found.');`
-            : "",
-        };
-      },
-    };
+    const { suffix: suffixFn, ...virtual }: NonNullable<Snippet["virtual"]> =
+      snippet.virtual ?? {
+        load: () => {
+          return {
+            map: { mappings: "" as const },
+            code: this.devMode
+              ? `console.warn('[mixcode]', ${JSON.stringify(
+                  id,
+                )}, 'not found.');`
+              : "",
+          };
+        },
+      };
 
     // Modules will be imported by index.html in "serve" command, but not in "build" command.
     // Filter it by default to eliminate differences.
+    const importer =
+      typeof snippet.importer === "function"
+        ? snippet.importer.call(this.snippetContext)
+        : snippet.importer;
     const importerFilter = createFilter(
-      snippet.importer?.include,
-      snippet.importer?.exclude || [/\.html$/],
+      importer?.include,
+      importer?.exclude || [/\.html$/],
     );
 
+    const suffix =
+      typeof suffixFn === "string"
+        ? suffixFn
+        : suffixFn?.call(this.snippetContext);
     return {
       importerFilter,
       snippetType,
-      suffix: virtual.suffix || ".ts",
+      suffix: suffix || ".ts",
       ...virtual,
     };
   }
@@ -173,9 +195,9 @@ export class Context {
     if (!id.endsWith(suffix)) return;
     const uri = createURI(stripSuffix(id, suffix));
     const [, , fn] = uri.pathname.split("/");
-    const result = await load(fn, uri.params);
+    const result = await load.call(this.snippetContext, fn, uri.params);
     if (!result) return;
-    const dtsText = await dts?.(fn);
+    const dtsText = await dts?.call(this.snippetContext, fn);
     if (dtsText) {
       this.#updateDts(fn, dtsText);
     }

@@ -19,7 +19,3 @@ function Example() {
   );
 }
 ```
-
-### Vue
-
-// TODO: impl vue/useXxxDialog
