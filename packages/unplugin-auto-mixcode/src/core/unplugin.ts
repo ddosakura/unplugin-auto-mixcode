@@ -55,18 +55,20 @@ export default createUnplugin<Options>((options = {}) => {
     },
 
     resolveId(id, importer) {
-      if (id === "~mixcode") return "virtual:mixcode.ts";
-      if (importer === "virtual:mixcode.ts") return "virtual:mixcode";
+      if (id === "~mixcode") return "virtual:mixcode/__init__.ts";
+      if (importer === "virtual:mixcode/__init__.ts")
+        return "virtual:mixcode/__init__";
 
       const uri = id.replace(/^\/?~mixcode\//, PREFIX_MIXCODE_SNIPPET);
       if (!uri.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
       return ctx.resolveId(createURI(uri), importer);
     },
+    loadInclude(id) {
+      return id.startsWith(PREFIX_MIXCODE_SNIPPET);
+    },
     load(id) {
-      if (id === "virtual:mixcode.ts") return ctx.initScript();
-      if (id === "virtual:mixcode") return ctx.initScript(true);
-
-      if (!id.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
+      if (id === "virtual:mixcode/__init__.ts") return ctx.initScript();
+      if (id === "virtual:mixcode/__init__") return ctx.initScript(true);
       return ctx.load(id);
     },
 
