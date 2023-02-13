@@ -2,6 +2,9 @@ import type { Awaitable } from "@antfu/utils";
 import type { FilterPattern } from "@rollup/pluginutils";
 import type MagicString from "magic-string";
 import type { VitePlugin } from "unplugin";
+import type { Logger } from "vite";
+
+import type { Watcher } from "./watcher";
 
 export type UnwrapObjectHook<T> = T extends { handler: infer V } ? V : T;
 
@@ -13,6 +16,8 @@ type SourceDescription = Exclude<
 >;
 
 export interface SnippetContext {
+  readonly root: string;
+  readonly logger?: Logger;
   readonly framework: Framework;
 }
 
@@ -65,6 +70,7 @@ export interface Snippet<T = any> {
     s: MagicString,
     context?: T,
   ): undefined | string | { code: string; context: T };
+  createWatcher?(this: SnippetContext): Watcher;
 }
 
 export type Framework = "react" | "vue" | "vue2";

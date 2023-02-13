@@ -15,10 +15,11 @@ import type {
   UnwrapObjectHook,
 } from "./types";
 
-export const name = "unplugin-auto-mixcode";
+export const PLUGIN_NAME = "unplugin-auto-mixcode";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const warn = (...args: any[]) => console.warn(`[${name}]`, ...args);
+export const warn = (...args: any[]) =>
+  console.warn(`[${PLUGIN_NAME}]`, ...args);
 
 type ConfigResolvedFn = UnwrapObjectHook<
   NonNullable<VitePlugin["configResolved"]>
@@ -88,7 +89,7 @@ export const parseSnippets = (
   return Object.fromEntries(entries);
 };
 
-export const PREFIX_MIXCODE_SNIPPET = "virtual:mixcode/";
+export const PREFIX_MIXCODE_VIRTUAL_MODULE = "virtual:mixcode/";
 
 export const snippetsFromPreset = (presets: Array<Preset> = []) =>
   presets.reduce(
@@ -106,7 +107,7 @@ export const createSnippetResolver = (snippets: Record<string, Snippet>) => {
       ? {
           name: "default",
           as: name,
-          from: `${PREFIX_MIXCODE_SNIPPET}${result[0]}/${name}`,
+          from: `${PREFIX_MIXCODE_VIRTUAL_MODULE}${result[0]}/${name}`,
         }
       : undefined;
   };

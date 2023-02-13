@@ -5,12 +5,12 @@ import { createUnplugin } from "unplugin";
 import { Context } from "./ctx";
 import type { Options } from "./types";
 import {
-  PREFIX_MIXCODE_SNIPPET,
+  PLUGIN_NAME,
+  PREFIX_MIXCODE_VIRTUAL_MODULE,
   checkUnimportPlugn,
   checkVue2Plugin,
   checkVuePlugin,
   createURI,
-  name,
   normalizeStringOption,
   snippetsFromPreset,
 } from "./utils";
@@ -40,7 +40,7 @@ export default createUnplugin<Options>((options = {}) => {
   });
 
   return {
-    name,
+    name: PLUGIN_NAME,
     enforce: "pre",
 
     resolver(name: string) {
@@ -55,20 +55,23 @@ export default createUnplugin<Options>((options = {}) => {
     },
 
     resolveId(id, importer) {
-      if (id === "~mixcode") return "virtual:mixcode/__init__.ts";
-      if (importer === "virtual:mixcode/__init__.ts")
-        return "virtual:mixcode/__init__";
+      if (id === "~mixcode")
+        return `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`;
+      if (importer === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`)
+        return `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__`;
 
-      const uri = id.replace(/^\/?~mixcode\//, PREFIX_MIXCODE_SNIPPET);
-      if (!uri.startsWith(PREFIX_MIXCODE_SNIPPET)) return;
+      const uri = id.replace(/^\/?~mixcode\//, PREFIX_MIXCODE_VIRTUAL_MODULE);
+      if (!uri.startsWith(PREFIX_MIXCODE_VIRTUAL_MODULE)) return;
       return ctx.resolveId(createURI(uri), importer);
     },
     loadInclude(id) {
-      return id.startsWith(PREFIX_MIXCODE_SNIPPET);
+      return id.startsWith(PREFIX_MIXCODE_VIRTUAL_MODULE);
     },
     load(id) {
-      if (id === "virtual:mixcode/__init__.ts") return ctx.initScript();
-      if (id === "virtual:mixcode/__init__") return ctx.initScript(true);
+      if (id === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`)
+        return ctx.initScript();
+      if (id === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__`)
+        return ctx.initScript(true);
       return ctx.load(id);
     },
 
@@ -80,12 +83,16 @@ export default createUnplugin<Options>((options = {}) => {
     },
 
     vite: {
+      async handleHotUpdate({ file }) {
+        ctx.updateCacheImports(file);
+      },
       configResolved(config) {
         checkUnimportPlugn(config);
 
         if (options.root) {
           ctx.setRoot(options.root);
         }
+        ctx.setLogger(config.logger);
         if (config.command === "serve") {
           ctx.devMode = true;
         }
@@ -98,10 +105,47 @@ export default createUnplugin<Options>((options = {}) => {
             ctx.setFramework("vue2");
           }
         }
+
+        if (config.build.watch && config.command === "build") {
+          ctx.setupWatcher();
+        }
       },
-      async handleHotUpdate({ file }) {
-        ctx.updateCacheImports(file);
+      configureServer(server) {
+        ctx.setupViteServer(server);
       },
+    },
+
+    // https://github1s.com/antfu/unplugin-vue-components/blob/HEAD/src/core/unplugin.ts
+    webpack(compiler) {
+      // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+      let watcher: any; // Watching
+      let fileDepQueue: {
+        path: string;
+        type: "unlink" | "add" | "change";
+      }[] = [];
+      compiler.hooks.watchRun.tap(PLUGIN_NAME, () => {
+        // ensure watcher is ready(supported since webpack@5.0.0-rc.1)
+        if (!watcher && compiler.watching) {
+          watcher = compiler.watching;
+          ctx.setupWatcher((path, type) => {
+            fileDepQueue.push({ path, type });
+            // process.nextTick is for aggregated file change event
+            process.nextTick(() => {
+              watcher.invalidate();
+            });
+          });
+        }
+      });
+      // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+      compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation: any) => {
+        if (fileDepQueue.length) {
+          fileDepQueue.forEach(({ path, type }) => {
+            if (type === "unlink") compilation.fileDependencies.delete(path);
+            if (type === "add") compilation.fileDependencies.add(path);
+          });
+          fileDepQueue = [];
+        }
+      });
     },
   };
 });

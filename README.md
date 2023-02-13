@@ -40,9 +40,18 @@ export default defineConfig({
 
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
   - [ ] router
+    - [x] react
+    - [ ] vue
+    - [ ] vue2
   - [ ] store
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
   - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
+- [pages](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
+  - [ ] debug hmr & webpack
+  - [ ] spa
+    - [ ] vue2
+    - [ ] routeBlockQueryRE by resolveId
+  - [ ] mpa
 - [run](./packages/unplugin-auto-mixcode/src/snippets/run/README.md)
 
 ## Roadmap
@@ -50,7 +59,6 @@ export default defineConfig({
 - features
   - [ ] support unimport's addon
 - snippets
-  - [ ] pages (spa/mpa)
   - [ ] layout
   - [ ] xstate
   - [ ] Design Patterns

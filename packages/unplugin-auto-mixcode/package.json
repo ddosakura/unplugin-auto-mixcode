@@ -55,8 +55,11 @@
   "dependencies": {
     "@antfu/utils": "^0.7.2",
     "@rollup/pluginutils": "^5.0.2",
+    "chokidar": "^3.5.3",
     "local-pkg": "^0.4.3",
     "magic-string": "^0.27.0",
-    "unplugin": "^1.0.1"
+    "minimatch": "^6.1.10",
+    "unplugin": "^1.0.1",
+    "vite-plugin-pages": "^0.28.0"
   }
 }

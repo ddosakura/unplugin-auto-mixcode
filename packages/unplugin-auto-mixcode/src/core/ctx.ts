@@ -1,5 +1,8 @@
+import type { FSWatcher } from "node:fs";
+
 import { createFilter } from "@rollup/pluginutils";
 import MagicString from "magic-string";
+import type { Logger, ViteDevServer } from "vite";
 
 import { createCacheStore } from "./cache";
 import type {
@@ -9,6 +12,7 @@ import type {
   SnippetContext,
 } from "./types";
 import {
+  PREFIX_MIXCODE_VIRTUAL_MODULE,
   type SnippetResolver,
   type URI,
   createSnippetResolver,
@@ -16,23 +20,24 @@ import {
   parseSnippets,
   stripSuffix,
 } from "./utils";
+import type { Watcher } from "./watcher";
 
 type DtsFn = NonNullable<NonNullable<Snippet["virtual"]>["dts"]>;
 
-const DECLARE_VIRTUAL_MODULE = 'declare module "virtual:mixcode';
+const DECLARE_VIRTUAL_MODULE = `declare module "${PREFIX_MIXCODE_VIRTUAL_MODULE}`;
 
 const wrapDtsFn = (scope: string, fn: DtsFn): DtsFn =>
   async function (this: SnippetContext, id: string) {
     const raw = await fn.call(this, id);
     if (raw.startsWith("{") && raw.endsWith("}")) {
-      return `\n${DECLARE_VIRTUAL_MODULE}/${scope}/${id}" ${raw}\n`;
+      return `\n${DECLARE_VIRTUAL_MODULE}${scope}/${id}" ${raw}\n`;
     }
     const code = raw
       .split("\n")
       .map((line) => (line ? `  ${line}` : ""))
       .filter(Boolean)
       .join("\n");
-    return `\n${DECLARE_VIRTUAL_MODULE}/${scope}/${id}" {\n${code}\n}\n`;
+    return `\n${DECLARE_VIRTUAL_MODULE}${scope}/${id}" {\n${code}\n}\n`;
   };
 
 export class Context {
@@ -55,9 +60,16 @@ export class Context {
         return (macro ? [name, macro!] : undefined) as any;
       })
       .filter(Boolean);
+    this.#watchers = Object.values(snippets)
+      .map(({ createWatcher }) => createWatcher?.call(this.snippetContext)!)
+      .filter(Boolean);
   }
   setRoot(root: string) {
     this.options.root = root;
+  }
+  #logger?: Logger;
+  setLogger(logger: Logger) {
+    this.#logger = logger;
   }
 
   #snippets: Record<string, Snippet> = {};
@@ -72,6 +84,8 @@ export class Context {
 
   get snippetContext(): SnippetContext {
     return {
+      root: this.options.root,
+      logger: this.#logger,
       framework: this.options.framework,
     };
   }
@@ -106,6 +120,39 @@ export class Context {
       code: s.toString(),
       map: s.generateMap({ source: id, includeContent: true }),
     };
+  }
+
+  #watchers: Array<Watcher> = [];
+  setupWatcher(
+    emitUpdate?: (
+      this: Watcher,
+      path: string,
+      type: "unlink" | "add" | "change",
+    ) => void,
+    watcher?: FSWatcher,
+  ) {
+    this.#watchers.forEach((w) => w.setup(emitUpdate, watcher));
+  }
+  setupViteServer(server: ViteDevServer) {
+    this.setupWatcher(async function (this, path, type) {
+      const result = await this.options.onUpdate?.(path, type);
+      if (!result) return;
+      const {
+        hmrPayload = {
+          type: "full-reload",
+        },
+        invalidateModules = [],
+      } = result;
+      const { moduleGraph } = server;
+      invalidateModules.forEach((module) => {
+        const mods = moduleGraph.getModulesByFile(module);
+        if (!mods) return;
+        mods.forEach((mod) => {
+          moduleGraph.invalidateModule(mod, new Set());
+        });
+      });
+      server.ws.send(hmrPayload);
+    }, server.watcher);
   }
 
   #cacheStore?: ReturnType<typeof createCacheStore>;

@@ -29,6 +29,7 @@ const scanCacheImport = async (
     const id = token.split("/").at(1);
     if (id && source.includes(id)) return;
     // TODO: Handles the removal of the virtual module cache imported by the macro
+    // TODO: import from `virtual:mixcode/` may needless
     tokens.delete(token);
   });
   if (tokens.size === 0) {

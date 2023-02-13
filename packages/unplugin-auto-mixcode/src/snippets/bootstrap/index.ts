@@ -1,16 +1,20 @@
 import type { Framework, Snippet } from "@/core/types";
 
+import { getReactRouter } from "@/snippets/pages/utils";
+
 export const snippetBootstrap: Snippet = {
   // support to import from .html
   importer: { exclude: [] },
 
   // `~mixcode/bootstrap(/<framework>)?`
   virtual: {
-    suffix: ".tsx",
+    suffix(this) {
+      return ["react"].includes(this.framework) ? ".tsx" : ".ts";
+    },
     load(
       this,
       rawFramework,
-      { unocss, import: importScript, app, root = "root" },
+      { unocss, import: importScript, app, root = "root", router },
     ) {
       const framework =
         rawFramework === "index" ? this.framework : (rawFramework as Framework);
@@ -19,7 +23,7 @@ export const snippetBootstrap: Snippet = {
         return `console.warn('[mixcode] unknown framework ${framework}');`;
       }
 
-      const options: BootstrapOptions = { root };
+      const options: BootstrapOptions = { root, router: getRouterType(router) };
       return `
 import "~mixcode";
 
@@ -34,6 +38,13 @@ ${FRAMEWORK_BOOTSTRAP[framework](options)}
   },
 };
 
+const getRouterType = (router?: string) => {
+  if (typeof router === "undefined") return;
+  return ["browser"].includes(router) ? (router as "browser") : "hash";
+};
+
+type RouterType = NonNullable<ReturnType<typeof getRouterType>>;
+
 const DEFAULT_APP_PATH = {
   react: "/src/App",
   vue: "/src/App.vue",
@@ -42,6 +53,7 @@ const DEFAULT_APP_PATH = {
 
 interface BootstrapOptions {
   root: string;
+  router?: RouterType;
 }
 
 const FRAMEWORK_BOOTSTRAP = {
@@ -55,9 +67,30 @@ function bootstrapReact(options: BootstrapOptions) {
 import React from "react";
 import ReactDOM from "react-dom/client";
 
+${
+  options.router
+    ? `
+import { Suspense } from "react";
+import { ${
+        options.router === "hash" ? "HashRouter" : "BrowserRouter"
+      } as Router, useRoutes } from "${getReactRouter()}";
+import routes from "~mixcode/pages";
+console.log({ routes })
+
+const Pages = () => {
+  return (
+    <Suspense fallback={<App />}>
+      {useRoutes(routes)}
+    </Suspense>
+  );
+};
+`
+    : ""
+}
+
 ReactDOM.createRoot(document.getElementById("${options.root}") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    ${options.router ? "<Router><Pages /></Router>" : "<App />"}
   </React.StrictMode>,
 );
 `;

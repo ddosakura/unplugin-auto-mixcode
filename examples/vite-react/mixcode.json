@@ -12,7 +12,16 @@
         }
       ],
       [
-        "src/App.tsx",
+        "src/modules/dynamic.tsx",
+        {
+          "instanceof": "Set",
+          "value": [
+            "dialog/use$HelloWorldDialog"
+          ]
+        }
+      ],
+      [
+        "src/pages/index.tsx",
         {
           "instanceof": "Set",
           "value": [
@@ -22,11 +31,11 @@
         }
       ],
       [
-        "src/dynamic.tsx",
+        "virtual:mixcode/bootstrap/index?unocss&import=/src/index.css&router.tsx",
         {
           "instanceof": "Set",
           "value": [
-            "dialog/use$HelloWorldDialog"
+            "pages/index"
           ]
         }
       ]

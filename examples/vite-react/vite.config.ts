@@ -25,6 +25,7 @@ export default defineConfig({
   server: { port: 3000 },
   plugins: [
     Inspect(),
+    mixcode,
     UnoCSS(),
     react(),
     AutoImport({
@@ -37,6 +38,8 @@ export default defineConfig({
       dirs: ["src/hooks", "src/components"],
       resolvers: [mixcode.resolver],
     }),
-    mixcode,
   ],
+  resolve: {
+    alias: { "@": "./src" },
+  },
 });
