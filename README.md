@@ -43,7 +43,6 @@ export default defineConfig({
   - [ ] store
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
   - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
-  - [ ] custom dialog snippet's prefix/suffix
 - [run](./packages/unplugin-auto-mixcode/src/snippets/run/README.md)
 
 ## Roadmap

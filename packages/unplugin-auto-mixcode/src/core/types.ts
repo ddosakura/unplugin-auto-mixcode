@@ -36,7 +36,8 @@ interface ImporterPattern {
  *  `e.g. import 'virtual:mixcode/...'`
  * 2. load virtual module
  */
-export interface Snippet {
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+export interface Snippet<T = any> {
   importer?:
     | ImporterPattern
     | ((this: SnippetContext) => ImporterPattern | undefined);
@@ -58,7 +59,7 @@ export interface Snippet {
     /** virtual module's dts */
     dts?(this: SnippetContext, id: string): Awaitable<string>;
   };
-  macro?<T>(
+  macro?(
     this: SnippetContext,
     params: Record<string, string>,
     s: MagicString,

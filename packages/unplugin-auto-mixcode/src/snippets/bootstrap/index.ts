@@ -1,6 +1,6 @@
 import type { Framework, Snippet } from "@/core/types";
 
-export const bootstrap: Snippet = {
+export const snippetBootstrap: Snippet = {
   // support to import from .html
   importer: { exclude: [] },
 

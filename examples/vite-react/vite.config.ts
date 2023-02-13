@@ -10,7 +10,7 @@ import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
 const mixcode = AutoMixcode({
   dts: "src/auto-mixcode.d.ts",
-  presets: [presetRecommend],
+  presets: [presetRecommend()],
   snippets: {
     foo: {
       macro() {
