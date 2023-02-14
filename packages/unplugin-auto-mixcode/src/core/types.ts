@@ -58,6 +58,15 @@ export interface Snippet<T = any> {
      * @defaultValue '.ts'
      **/
     suffix?: string | ((this: SnippetContext) => string | undefined);
+    /** to hijack modules */
+    resolveId?(
+      this: SnippetContext,
+      id: string,
+      importer: string | undefined,
+      options: {
+        isEntry: boolean;
+      },
+    ): Awaitable<string | undefined | void>;
     /** virtual module loader */
     load(
       this: SnippetContext,

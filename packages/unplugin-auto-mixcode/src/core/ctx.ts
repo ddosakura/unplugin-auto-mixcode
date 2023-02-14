@@ -122,6 +122,20 @@ export class Context {
     };
   }
 
+  async resolveId(
+    ...args: Parameters<
+      NonNullable<NonNullable<Snippet["virtual"]>["resolveId"]>
+    >
+  ) {
+    for await (const snippet of Object.values(this.snippets)) {
+      const result = await snippet.virtual?.resolveId?.call(
+        this.snippetContext,
+        ...args,
+      );
+      if (result) return result;
+    }
+  }
+
   #macro: Array<[string, NonNullable<Snippet["macro"]>]> = [];
   async transform(code: string, id: string) {
     const s = new MagicString(code);
@@ -250,7 +264,7 @@ export class Context {
     store.updateIdentifier(idWithScope, importer);
   }
   // virtual:mixcode/<scope>/<identifier>?params<suffix>
-  resolveId(uri: URI, importer?: string) {
+  resolveVirtualModuleId(uri: URI, importer?: string) {
     const { importerFilter, snippetType, suffix } = this.#snippetVirtual(
       uri.pathname,
     );

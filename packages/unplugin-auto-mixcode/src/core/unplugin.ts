@@ -54,15 +54,18 @@ export default createUnplugin<Options>((options = {}) => {
       return ctx.transform(code, id);
     },
 
-    resolveId(id, importer) {
+    async resolveId(id, importer, options) {
       if (id === "~mixcode")
         return `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`;
       if (importer === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`)
         return `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__`;
 
+      const result = await ctx.resolveId(id, importer, options);
+      if (result) return result;
+
       const uri = id.replace(/^\/?~mixcode\//, PREFIX_MIXCODE_VIRTUAL_MODULE);
       if (!uri.startsWith(PREFIX_MIXCODE_VIRTUAL_MODULE)) return;
-      return ctx.resolveId(createURI(uri), importer);
+      return ctx.resolveVirtualModuleId(createURI(uri), importer);
     },
     loadInclude(id) {
       return id.startsWith(PREFIX_MIXCODE_VIRTUAL_MODULE);

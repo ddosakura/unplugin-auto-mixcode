@@ -41,6 +41,7 @@ export default defineConfig({
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
   - [ ] router
     - [x] react
+      - [ ]https://reactrouter.com/en/main/routers/picking-a-router
     - [ ] vue
     - [ ] vue2
   - [ ] store
@@ -62,9 +63,11 @@ export default defineConfig({
   - [ ] immer
   - [ ] xstate
   - [ ] rxjs
+    - https://cn.vuejs.org/guide/extras/reactivity-in-depth.html#rxjs
   - [ ] query (swr/useReactQuery)
   - [ ] layout
   - [ ] Design Patterns
+  - [ ] polyfill
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-vue
