@@ -3,6 +3,10 @@ import type { Framework, Snippet } from "@/core/types";
 import { getReactRouter } from "@/snippets/pages/utils";
 
 export const snippetBootstrap: Snippet = {
+  dependencies: {
+    "vite-plugin-pages": { optional: true },
+    pages: { optional: true, snippet: true },
+  },
   // support to import from .html
   importer: { exclude: [] },
 

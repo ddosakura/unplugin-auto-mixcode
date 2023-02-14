@@ -1,4 +1,4 @@
-import type { Awaitable } from "@antfu/utils";
+import type { Arrayable, Awaitable } from "@antfu/utils";
 import type { FilterPattern } from "@rollup/pluginutils";
 import type MagicString from "magic-string";
 import type { VitePlugin } from "unplugin";
@@ -43,6 +43,9 @@ interface ImporterPattern {
  */
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export interface Snippet<T = any> {
+  dependencies?: Arrayable<
+    string | Record<string, { optional?: true; snippet?: true; msg?: string }>
+  >;
   importer?:
     | ImporterPattern
     | ((this: SnippetContext) => ImporterPattern | undefined);

@@ -59,10 +59,12 @@ export default defineConfig({
 - features
   - [ ] support unimport's addon
 - snippets
-  - [ ] layout
+  - [ ] immer
   - [ ] xstate
-  - [ ] Design Patterns
+  - [ ] rxjs
   - [ ] query (swr/useReactQuery)
+  - [ ] layout
+  - [ ] Design Patterns
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-vue

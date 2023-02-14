@@ -1,6 +1,7 @@
 import type { FSWatcher } from "node:fs";
 
 import { createFilter } from "@rollup/pluginutils";
+import { isPackageExists } from "local-pkg";
 import MagicString from "magic-string";
 import type { Logger, ViteDevServer } from "vite";
 
@@ -19,6 +20,7 @@ import {
   createURI,
   parseSnippets,
   stripSuffix,
+  warn,
 } from "./utils";
 import type { Watcher } from "./watcher";
 
@@ -47,10 +49,40 @@ export class Context {
   setFramework(framework: Framework) {
     this.options.framework = framework;
     const snippets = parseSnippets(framework, this.options.snippets);
+    const snippetNames = Object.keys(snippets);
     Object.entries(snippets).forEach(([scope, snippet]) => {
       if (snippet.virtual?.dts) {
         snippet.virtual.dts = wrapDtsFn(scope, snippet.virtual.dts);
       }
+      if (!snippet.dependencies) return;
+      const dependencies = Array.isArray(snippet.dependencies)
+        ? snippet.dependencies
+        : [snippet.dependencies];
+      dependencies.forEach((dep) => {
+        const deps =
+          typeof dep === "string"
+            ? {
+                [dep]: {
+                  optional: undefined,
+                  snippet: undefined,
+                  msg: undefined,
+                },
+              }
+            : dep;
+        Object.entries(deps).forEach(([name, { optional, snippet, msg }]) => {
+          const isExists = snippet
+            ? snippetNames.includes(name)
+            : isPackageExists(name);
+          if (isExists) return;
+          warn(
+            `Snippet '${scope}'`,
+            msg ??
+              `${optional ? "may" : "must"} be dependent on ${
+                snippet ? "Snippet " : ""
+              }'${name}'`,
+          );
+        });
+      });
     });
     this.#snippets = snippets;
     this.#resolver = createSnippetResolver(snippets);
