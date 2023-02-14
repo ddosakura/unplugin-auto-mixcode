@@ -20,7 +20,7 @@ export interface Resource {
 export interface WatcherOptions {
   resource: Resource;
   rawGlobs?: string | string[];
-  match?: (path: string) => boolean;
+  match?: (path: string) => Awaitable<boolean>;
   onUpdate?(
     path: string,
     type: "unlink" | "add" | "change",

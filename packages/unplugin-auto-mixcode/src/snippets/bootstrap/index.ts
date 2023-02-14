@@ -79,7 +79,7 @@ import { ${
         options.router === "hash" ? "HashRouter" : "BrowserRouter"
       } as Router, useRoutes } from "${getReactRouter()}";
 import routes from "~mixcode/pages";
-console.log({ routes })
+console.log("[debug routes]", { routes })
 
 const Pages = () => {
   return (

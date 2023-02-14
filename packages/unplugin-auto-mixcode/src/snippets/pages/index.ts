@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { slash } from "@antfu/utils";
 import {
   PageContext,
+  type ResolvedOptions,
   type UserOptions,
   reactResolver,
   vueResolver,
@@ -15,6 +16,18 @@ import { Watcher } from "@/core/watcher";
 import { getReactRouter } from "./utils";
 
 export interface SnippetPagesOptions extends UserOptions {}
+
+function isPagesDir(path: string, options: ResolvedOptions) {
+  for (const page of options.dirs) {
+    const dirPath = slash(resolve(options.root, page.dir));
+    if (path.startsWith(dirPath)) return true;
+  }
+  return false;
+}
+
+function isTarget(path: string, options: ResolvedOptions) {
+  return isPagesDir(path, options) && options.extensionsRE.test(path);
+}
 
 export const snippetPages = (
   options: Partial<SnippetPagesOptions> = {},
@@ -52,7 +65,14 @@ export const snippetPages = (
             )!;
             return ctx.addPage(path, page);
           },
-          del: async () => {},
+          del: async (path) => {
+            const ctx = await getPageContext(this);
+            return ctx.removePage(path);
+          },
+        },
+        match: async (path) => {
+          const ctx = await getPageContext(this);
+          return isTarget(path, ctx.options);
         },
         onUpdate: async (path, type) => {
           const ctx = await getPageContext(this);

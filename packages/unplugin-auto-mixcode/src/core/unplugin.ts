@@ -130,7 +130,9 @@ export default createUnplugin<Options>((options = {}) => {
         // ensure watcher is ready(supported since webpack@5.0.0-rc.1)
         if (!watcher && compiler.watching) {
           watcher = compiler.watching;
-          ctx.setupWatcher((path, type) => {
+          ctx.setupWatcher(async function (this, path, type) {
+            const result = await this.options.onUpdate?.(path, type);
+            if (!result) return;
             fileDepQueue.push({ path, type });
             // process.nextTick is for aggregated file change event
             process.nextTick(() => {
