@@ -41,14 +41,14 @@ export default defineConfig({
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
   - [ ] router
     - [x] react
-      - [ ]https://reactrouter.com/en/main/routers/picking-a-router
     - [ ] vue
+      - https://router.vuejs.org/zh/guide/essentials/history-mode.html
     - [ ] vue2
   - [ ] store
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
   - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
 - [pages](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
-  - [ ] debug hmr & webpack
+  - [ ] test webpack
   - [ ] spa
     - [ ] vue2
     - [ ] routeBlockQueryRE by resolveId
