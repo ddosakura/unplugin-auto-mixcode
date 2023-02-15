@@ -40,18 +40,18 @@ export default defineConfig({
 
 - [blocks](./packages/unplugin-auto-mixcode/src/snippets/blocks/README.md)
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
-  - [ ] router
-    - [x] react
-    - [x] vue
-    - [ ] vue2
+  - [x] router
   - [ ] store
     - [ ] react
     - [x] vue
-    - [ ] vue2
-  - [ ] ssr
+    - [x] vue2
+  - [ ] ssr (need re-sort import code to export a `createApp` func)
+    - https://cn.vitejs.dev/guide/ssr.html
+    - https://vite-plugin-ssr.com/routing
     - [ ] react
-    - [x] vue
+    - [ ] vue
     - [ ] vue2
+      - https://v2.ssr.vuejs.org/zh/guide/
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
   - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
 - [pages](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)

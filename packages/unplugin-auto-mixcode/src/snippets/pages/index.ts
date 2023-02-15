@@ -106,7 +106,7 @@ export const snippetPages = (
         return {
           react,
           vue,
-          vue2: vue,
+          vue2,
         }[framework]();
       },
     },
@@ -127,6 +127,15 @@ const vue = () => {
   return `{
   import type { RouteRecordRaw } from "${pkg}";
   const routes: RouteRecordRaw[]
+  export default routes
+}`;
+};
+
+const vue2 = () => {
+  const pkg = getRouterPackage("vue2");
+  return `{
+  import type { RouteConfig } from "${pkg}";
+  const routes: RouteConfig[]
   export default routes
 }`;
 };

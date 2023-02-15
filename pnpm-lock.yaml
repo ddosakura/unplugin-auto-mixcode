@@ -90,6 +90,19 @@ importers:
       vite-plugin-inspect: 0.7.15_vite@4.1.1
       vue-tsc: 1.0.24_typescript@4.7.4
 
+  examples/vite-vue2:
+    specifiers:
+      '@mixcode/unplugin-auto-mixcode': workspace:*
+      '@vitejs/plugin-vue2': ^2.2.0
+      vue: '2.7'
+      vue-router: '3'
+    dependencies:
+      vue: 2.7.14
+      vue-router: 3.6.5_vue@2.7.14
+    devDependencies:
+      '@mixcode/unplugin-auto-mixcode': link:../../packages/unplugin-auto-mixcode
+      '@vitejs/plugin-vue2': 2.2.0_vue@2.7.14
+
   packages/glue-react:
     specifiers:
       '@types/react': ^18.0.27
@@ -1469,6 +1482,16 @@ packages:
       vue: 3.2.47
     dev: true
 
+  /@vitejs/plugin-vue2/2.2.0_vue@2.7.14:
+    resolution: {integrity: sha512-1km7zEuZ/9QRPvzXSjikbTYGQPG86Mq1baktpC4sXqsXlb02HQKfi+fl8qVS703JM7cgm24Ga9j+RwKmvFn90A==}
+    engines: {node: ^14.18.0 || >= 16.0.0}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0
+      vue: ^2.7.0-0
+    dependencies:
+      vue: 2.7.14
+    dev: true
+
   /@vitest/expect/0.28.4:
     resolution: {integrity: sha512-JqK0NZ4brjvOSL8hXAnIsfi+jxDF7rH/ZWCGCt0FAqRnVFc1hXsfwXksQvEnKqD84avRt3gmeXoK4tNbmkoVsQ==}
     dependencies:
@@ -1553,6 +1576,13 @@ packages:
     dependencies:
       '@vue/compiler-core': 3.2.47
       '@vue/shared': 3.2.47
+
+  /@vue/compiler-sfc/2.7.14:
+    resolution: {integrity: sha512-aNmNHyLPsw+sVvlQFQ2/8sjNuLtK54TC6cuKnVzAY93ks4ZBrvwQSnkkIh7bsbNhum5hJBS00wSDipQ937f5DA==}
+    dependencies:
+      '@babel/parser': 7.20.15
+      postcss: 8.4.21
+      source-map: 0.6.1
 
   /@vue/compiler-sfc/3.2.47:
     resolution: {integrity: sha512-rog05W+2IFfxjMcFw10tM9+f7i/+FFpZJJ5XHX72NP9eC2uRD+42M3pYcQqDXVYoj74kHMSEdQ/WmCjt8JFksQ==}
@@ -2026,7 +2056,6 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
-    dev: true
 
   /csv-generate/3.4.3:
     resolution: {integrity: sha512-w/T+rqR0vwvHqWs/1ZyMDWtHHSJaN06klRqJXBEpDJaM/+dZkso0OKh1VcuuYvK3XM53KysVNq8Ko/epCK8wOw==}
@@ -4880,7 +4909,7 @@ packages:
       kolorist: 1.7.0
       sirv: 2.0.2
       ufo: 1.0.1
-      vite: 4.1.1_@types+node@18.11.19
+      vite: 4.1.1
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -5045,6 +5074,14 @@ packages:
       vue: 3.2.47
     dev: false
 
+  /vue-router/3.6.5_vue@2.7.14:
+    resolution: {integrity: sha512-VYXZQLtjuvKxxcshuRAwjHnciqZVoXAjTjcqBTz4rKc8qih9g9pI3hbDjmqXaHdgL3v8pV6P8Z335XvHzESxLQ==}
+    peerDependencies:
+      vue: ^2
+    dependencies:
+      vue: 2.7.14
+    dev: false
+
   /vue-router/4.1.6_vue@3.2.47:
     resolution: {integrity: sha512-DYWYwsG6xNPmLq/FmZn8Ip+qrhFEzA14EI12MsMgVxvHFDYvlr4NXpVF5hrRH1wVcDP8fGi5F4rxuJSl8/r+EQ==}
     peerDependencies:
@@ -5071,6 +5108,12 @@ packages:
       '@volar/vue-typescript': 1.0.24
       typescript: 4.7.4
     dev: true
+
+  /vue/2.7.14:
+    resolution: {integrity: sha512-b2qkFyOM0kwqWFuQmgd4o+uHGU7T+2z3T+WQp8UBjADfEv2n4FEMffzBmCKNP0IGzOEEfYjvtcC62xaSKeQDrQ==}
+    dependencies:
+      '@vue/compiler-sfc': 2.7.14
+      csstype: 3.1.1
 
   /vue/3.2.47:
     resolution: {integrity: sha512-60188y/9Dc9WVrAZeUVSDxRQOZ+z+y5nO2ts9jWXSTkMvayiWxCWOWtBQoYjLeccfXkiiPZWAHcV+WTPhkqJHQ==}

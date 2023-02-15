@@ -40,11 +40,14 @@ export function checkReactPlugin(config: Parameters<ConfigResolvedFn>[0]) {
 }
 
 export function checkVuePlugin(config: Parameters<ConfigResolvedFn>[0]) {
-  return config.plugins.find((p) => p.name === "vite:vue");
+  return config.plugins.find((p) =>
+    ["vite:vue", "unplugin-vue"].includes(p.name),
+  );
 }
 
 export function checkVue2Plugin(config: Parameters<ConfigResolvedFn>[0]) {
-  return config.plugins.find((p) => p.name === "vite-plugin-vue2");
+  // https://github.com/vitejs/vite-plugin-vue2
+  return config.plugins.find((p) => p.name === "vite:vue2");
 }
 
 export function checkSolidPlugin(config: Parameters<ConfigResolvedFn>[0]) {

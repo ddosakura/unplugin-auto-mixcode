@@ -1,0 +1,16 @@
+{
+  "name": "vite-vue2",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "vue": "2.7",
+    "vue-router": "3"
+  },
+  "devDependencies": {
+    "@mixcode/unplugin-auto-mixcode": "workspace:*",
+    "@vitejs/plugin-vue2": "^2.2.0"
+  }
+}
