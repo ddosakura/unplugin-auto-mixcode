@@ -1,0 +1,25 @@
+{
+  "imports": {
+    "instanceof": "Map",
+    "value": [
+      [
+        "index.html",
+        {
+          "instanceof": "Set",
+          "value": [
+            "bootstrap/index"
+          ]
+        }
+      ],
+      [
+        "virtual:mixcode/bootstrap/index?import=/src/assets/main.css&router&store&root=app.ts",
+        {
+          "instanceof": "Set",
+          "value": [
+            "pages/index"
+          ]
+        }
+      ]
+    ]
+  }
+}

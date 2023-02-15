@@ -12,7 +12,8 @@ import {
 import type { Snippet, SnippetContext } from "@/core/types";
 import { PREFIX_MIXCODE_VIRTUAL_MODULE } from "@/core/utils";
 import { Watcher } from "@/core/watcher";
-import { ROUTER_PACKAGES, getPlatform } from "@/snippets/shared";
+import { MIXCODE_BASIC_BLOCK_IDS } from "@/snippets/blocks";
+import { getRouterPackage } from "@/snippets/shared";
 
 export interface SnippetPagesOptions extends UserOptions {}
 
@@ -27,6 +28,8 @@ function isPagesDir(path: string, options: ResolvedOptions) {
 function isTarget(path: string, options: ResolvedOptions) {
   return isPagesDir(path, options) && options.extensionsRE.test(path);
 }
+
+const routeBlockQueryRE = /\?vue&type=route/;
 
 export const snippetPages = (
   options: Partial<SnippetPagesOptions> = {},
@@ -54,31 +57,31 @@ export const snippetPages = (
     return pageContext;
   }
   return {
+    dependencies: { blocks: { snippet: true } },
     createWatcher(this) {
       return new Watcher({
-        resource: {
-          add: async (path) => {
-            const ctx = await getPageContext(this);
-            const page = ctx.options.dirs.find((i) =>
-              path.startsWith(slash(resolve(this.root, i.dir))),
-            )!;
-            return ctx.addPage(path, page);
-          },
-          del: async (path) => {
-            const ctx = await getPageContext(this);
-            return ctx.removePage(path);
-          },
-        },
         match: async (path) => {
           const ctx = await getPageContext(this);
           return isTarget(path, ctx.options);
         },
         onUpdate: async (path, type) => {
           const ctx = await getPageContext(this);
-          if (type === "change") {
-            const page = ctx.pageRouteMap.get(path);
-            if (page) await ctx.options.resolver.hmr?.changed?.(ctx, path);
-            return;
+          switch (type) {
+            case "add": {
+              const ctx = await getPageContext(this);
+              const page = ctx.options.dirs.find((i) =>
+                path.startsWith(slash(resolve(this.root, i.dir))),
+              )!;
+              await ctx.addPage(path, page);
+            }
+            case "unlink": {
+              const ctx = await getPageContext(this);
+              await ctx.removePage(path);
+            }
+            case "change": {
+              const page = ctx.pageRouteMap.get(path);
+              if (page) await ctx.options.resolver.hmr?.changed?.(ctx, path);
+            }
           }
           return {
             invalidateModules: [
@@ -90,6 +93,10 @@ export const snippetPages = (
     },
     // `~mixcode/pages`
     virtual: {
+      resolveId(id) {
+        if (routeBlockQueryRE.test(id))
+          return MIXCODE_BASIC_BLOCK_IDS.empty_object;
+      },
       async load(this) {
         const ctx = await getPageContext(this);
         return ctx.resolveRoutes();
@@ -107,7 +114,7 @@ export const snippetPages = (
 };
 
 const react = () => {
-  const pkg = ROUTER_PACKAGES["react"][getPlatform("react")];
+  const pkg = getRouterPackage("react");
   return `{
   import type { RouteObject } from "${pkg}";
   const routes: RouteObject[];
@@ -116,8 +123,9 @@ const react = () => {
 };
 
 const vue = () => {
+  const pkg = getRouterPackage("vue");
   return `{
-  import type { RouteRecordRaw } from 'vue-router'
+  import type { RouteRecordRaw } from "${pkg}";
   const routes: RouteRecordRaw[]
   export default routes
 }`;

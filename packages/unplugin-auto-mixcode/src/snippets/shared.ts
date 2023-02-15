@@ -29,11 +29,18 @@ export const ROUTER_PACKAGES = {
     hippy: "react-router-dom",
   },
   vue: {
-    web: "",
-    hippy: "",
+    web: "vue-router", // v4
+    hippy: "@hippy/vue-router-next-history",
   },
   vue2: {
-    web: "",
-    hippy: "",
+    web: "vue-router", // v3
+    hippy: "@hippy/vue-router",
   },
 } satisfies Record<Framework, Partial<Record<Platform, string>>>;
+
+export const getRouterPackage = (
+  framework: Framework,
+  platform = getPlatform(framework),
+) =>
+  ROUTER_PACKAGES[framework][platform as "web"] ??
+  ROUTER_PACKAGES[framework]["web"];

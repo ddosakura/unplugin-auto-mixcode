@@ -3,7 +3,7 @@ import type { FSWatcher } from "node:fs";
 import { type Awaitable, slash } from "@antfu/utils";
 import chokidar from "chokidar";
 import minimatch from "minimatch";
-import type { HMRPayload, ViteDevServer } from "vite";
+import type { HMRPayload } from "vite";
 
 export function matchGlobs(filepath: string, globs: string[]) {
   for (const glob of globs) {
@@ -12,13 +12,7 @@ export function matchGlobs(filepath: string, globs: string[]) {
   return false;
 }
 
-export interface Resource {
-  add(paths: string): Promise<void>;
-  del(paths: string): Promise<void>;
-}
-
 export interface WatcherOptions {
-  resource: Resource;
   rawGlobs?: string | string[];
   match?: (path: string) => Awaitable<boolean>;
   onUpdate?(
@@ -57,22 +51,19 @@ export class Watcher {
     watcher: FSWatcher = chokidar.watch(this.globs),
   ) {
     watcher.on("unlink", async (path) => {
-      if (!this.#match(path)) return;
-
       path = slash(path);
-      await this.options.resource.del(path);
+      if (!this.#match(path)) return;
       emitUpdate?.call(this, path, "unlink");
     });
 
     watcher.on("add", async (path) => {
-      if (!this.#match(path)) return;
-
       path = slash(path);
-      await this.options.resource.add(path);
+      if (!this.#match(path)) return;
       emitUpdate?.call(this, path, "add");
     });
 
     watcher.on("change", async (path) => {
+      path = slash(path);
       if (!this.#match(path)) return;
       emitUpdate?.call(this, path, "change");
     });

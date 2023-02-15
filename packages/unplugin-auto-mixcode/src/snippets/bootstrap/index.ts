@@ -39,6 +39,8 @@ export const snippetBootstrap: Snippet = {
         import: importScript,
         app,
         router,
+        store,
+        ssr,
         root = "root",
         name = "MixcodeApp",
         container,
@@ -54,6 +56,8 @@ export const snippetBootstrap: Snippet = {
       const options: BootstrapOptions = {
         platform: getPlatform(framework),
         router: getRouterType(router),
+        store: typeof store !== "undefined",
+        ssr: typeof ssr !== "undefined",
         root,
         name,
         container,

@@ -1,4 +1,4 @@
-import { type Platform, ROUTER_PACKAGES } from "@/snippets/shared";
+import { type Platform, getRouterPackage } from "@/snippets/shared";
 
 import type { BootstrapOptions, RouterType } from "./common";
 
@@ -8,17 +8,16 @@ const byRouterComponent = (platform: Platform, routerType: RouterType) => {
       ? "NativeRouter"
       : platform === "hippy"
       ? "MemoryRouter"
-      : routerType === "hash"
-      ? "HashRouter"
+      : routerType === "browser"
+      ? "BrowserRouter"
       : routerType === "memory"
       ? "MemoryRouter"
-      : "BrowserRouter";
+      : "HashRouter";
+  const pkg = getRouterPackage("react", platform);
   return `
-import { ${component} as Router, useRoutes } from "${ROUTER_PACKAGES["react"][platform]}";
+import { ${component} as Router, useRoutes } from "${pkg}";
 
 import routes from "~mixcode/pages";
-console.log("[debug routes]", { routes })
-
 const Routes = () => <Suspense fallback={<App />}>
   {useRoutes(routes)}
 </Suspense>
@@ -34,13 +33,14 @@ const byRouterCreator = (platform: Platform, routerType: RouterType) => {
       ? "createNativeRouter"
       : platform === "hippy"
       ? "createMemoryRouter"
-      : routerType === "hash"
-      ? "createHashRouter"
+      : routerType === "browser"
+      ? "createBrowserRouter"
       : routerType === "memory"
       ? "createMemoryRouter"
-      : "createBrowserRouter";
+      : "createHashRouter";
+  const pkg = getRouterPackage("react", platform);
   return `
-import { ${creator} as createRouter, RouterProvider } from "${ROUTER_PACKAGES["react"][platform]}";
+import { ${creator} as createRouter, RouterProvider } from "${pkg}";
 
 import routes from "~mixcode/pages";
 console.log("[debug routes]", { routes })

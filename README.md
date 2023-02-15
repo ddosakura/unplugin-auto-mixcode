@@ -38,20 +38,30 @@ export default defineConfig({
 
 ### Snippets (with Snippet's Roadmap)
 
+- [blocks](./packages/unplugin-auto-mixcode/src/snippets/blocks/README.md)
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
   - [ ] router
     - [x] react
-    - [ ] vue
-      - https://router.vuejs.org/zh/guide/essentials/history-mode.html
+    - [x] vue
     - [ ] vue2
   - [ ] store
+    - [ ] react
+    - [x] vue
+    - [ ] vue2
+  - [ ] ssr
+    - [ ] react
+    - [x] vue
+    - [ ] vue2
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
   - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
 - [pages](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
   - [ ] test webpack
   - [ ] spa
+    - [x] react
+    - [x] vue
     - [ ] vue2
-    - [ ] routeBlockQueryRE by resolveId
+    - [ ] solid
+    - [ ] svelte
   - [ ] mpa
 - [run](./packages/unplugin-auto-mixcode/src/snippets/run/README.md)
 

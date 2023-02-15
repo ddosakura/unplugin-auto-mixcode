@@ -1,0 +1,24 @@
+{
+  "extends": "@mixcode/tsconfig/vue.json",
+  "include": [
+    "env.d.ts",
+    "components.d.ts",
+    "auto-imports.d.ts",
+    "auto-mixcode.d.ts",
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.config.json"
+    }
+  ]
+}

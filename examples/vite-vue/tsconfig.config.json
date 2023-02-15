@@ -1,0 +1,13 @@
+{
+  "extends": "@mixcode/tsconfig/node.json",
+  "compilerOptions": {
+    "composite": true
+  },
+  "include": [
+    "node-env.d.ts",
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "playwright.config.*"
+  ],
+}
