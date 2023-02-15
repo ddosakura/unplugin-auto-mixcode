@@ -99,7 +99,7 @@ export const snippetsFromPreset = (presets: Array<Preset> = []) =>
 
 export const createSnippetResolver = (snippets: Record<string, Snippet>) => {
   const list = Object.entries(snippets);
-  return (name: string) => {
+  return (name: string): ResolverResult | undefined => {
     const result = list.find(([, snippet]) =>
       snippet.virtual?.resolve?.(name) ? snippet : undefined,
     );
@@ -112,6 +112,12 @@ export const createSnippetResolver = (snippets: Record<string, Snippet>) => {
       : undefined;
   };
 };
+
+export interface ResolverResult {
+  as?: string;
+  name?: string;
+  from: string;
+}
 
 export type SnippetResolver = ReturnType<typeof createSnippetResolver>;
 

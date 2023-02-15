@@ -12,8 +12,7 @@ import {
 import type { Snippet, SnippetContext } from "@/core/types";
 import { PREFIX_MIXCODE_VIRTUAL_MODULE } from "@/core/utils";
 import { Watcher } from "@/core/watcher";
-
-import { getReactRouter } from "./utils";
+import { ROUTER_PACKAGES, getPlatform } from "@/snippets/shared";
 
 export interface SnippetPagesOptions extends UserOptions {}
 
@@ -108,8 +107,9 @@ export const snippetPages = (
 };
 
 const react = () => {
+  const pkg = ROUTER_PACKAGES["react"][getPlatform("react")];
   return `{
-  import type { RouteObject } from "${getReactRouter()}";
+  import type { RouteObject } from "${pkg}";
   const routes: RouteObject[];
   export default routes;
 }`;

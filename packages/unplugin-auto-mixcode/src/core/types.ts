@@ -71,14 +71,14 @@ export interface Snippet<T = any> {
     load(
       this: SnippetContext,
       id: string,
-      params: Record<string, string>,
+      params: Record<string, string | undefined>,
     ): Awaitable<SourceDescription | undefined>;
     /** virtual module's dts */
     dts?(this: SnippetContext, id: string): Awaitable<string>;
   };
   macro?(
     this: SnippetContext,
-    params: Record<string, string>,
+    params: Record<string, string | undefined>,
     s: MagicString,
     context?: T,
   ): undefined | string | { code: string; context: T };

@@ -1,4 +1,5 @@
 import type { Framework, Snippet } from "@/core/types";
+import { getPlatform } from "@/snippets/shared";
 
 import { type BootstrapOptions, getRouterType } from "./common";
 import { bootstrapReact } from "./react";
@@ -33,7 +34,15 @@ export const snippetBootstrap: Snippet = {
     load(
       this,
       rawFramework,
-      { unocss, import: importScript, app, root = "root", router },
+      {
+        unocss,
+        import: importScript,
+        app,
+        router,
+        root = "root",
+        name = "MixcodeApp",
+        container,
+      },
     ) {
       const framework =
         rawFramework === "index" ? this.framework : (rawFramework as Framework);
@@ -42,7 +51,13 @@ export const snippetBootstrap: Snippet = {
         return `console.warn('[mixcode] unknown framework ${framework}');`;
       }
 
-      const options: BootstrapOptions = { root, router: getRouterType(router) };
+      const options: BootstrapOptions = {
+        platform: getPlatform(framework),
+        router: getRouterType(router),
+        root,
+        name,
+        container,
+      };
       return `
 import "~mixcode";
 
