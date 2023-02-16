@@ -3,7 +3,7 @@
 
 declare module "virtual:mixcode/pages/index" {
   declare module "virtual:mixcode/pages/index" {
-    import type { RouteRecordRaw } from 'vue-router'
+    import type { RouteRecordRaw } from "vue-router";
     const routes: RouteRecordRaw[]
     export default routes
   }

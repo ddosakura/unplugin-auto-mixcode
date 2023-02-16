@@ -55,8 +55,8 @@ app.$mount("#${options.root}");
       : createApp(options, `el: "#${options.root}",`);
   return `
 import Vue from "${options.platform === "hippy" ? "@hippy/vue" : "vue"}";
-${options.store ? storeCode : ""}
 ${options.router ? createRouter(options.platform, options.router) : ""}
+${options.store ? storeCode : ""}
 ${bootstrapCode} 
 `;
 }

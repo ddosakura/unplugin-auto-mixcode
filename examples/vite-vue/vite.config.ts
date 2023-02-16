@@ -22,7 +22,7 @@ export default defineConfig({
     vue(),
     Components({}),
     AutoImport({
-      imports: ["vue", "vue-router"],
+      imports: ["vue", "vue-router", "pinia"],
       dirs: ["src/composables", "src/stores"],
       resolvers: [mixcode.resolver],
     }),

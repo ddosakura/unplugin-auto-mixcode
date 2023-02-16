@@ -9,18 +9,30 @@ import {
   snippetRun,
 } from "@/snippets";
 
+export interface PresetRecommendOptions {
+  dialog: Partial<SnippetDialogOptions>;
+  pages: Partial<SnippetPagesOptions>;
+}
+
 export const presetRecommend = ({
   dialog,
   pages,
-}: Partial<{
-  dialog: Partial<SnippetDialogOptions>;
-  pages: Partial<SnippetPagesOptions>;
-}> = {}): Preset => ({
+}: Partial<PresetRecommendOptions> = {}): Preset => ({
   snippets: {
     blocks: snippetBlocks,
     bootstrap: snippetBootstrap,
     dialog: snippetDialog(dialog),
     pages: snippetPages(pages),
     run: snippetRun,
+  } satisfies Record<string, Snippet | FrameworkSnippet>,
+});
+
+export interface PresetRecommendReactOptions extends PresetRecommendOptions {}
+
+export const presetRecommendReact = ({
+  ...options
+}: Partial<PresetRecommendReactOptions> = {}): Preset => ({
+  snippets: {
+    ...presetRecommend(options).snippets,
   } satisfies Record<string, Snippet | FrameworkSnippet>,
 });

@@ -43,6 +43,11 @@ export default defineConfig({
   - [x] router
   - [ ] store
     - [ ] react
+      - Pinia + https://github.com/antfu/reactivue
+      - Redux `@/features/counter/counterSlice`
+      - Mobx
+      - Recoil
+      - Jotai
     - [x] vue
     - [x] vue2
   - [ ] ssr (need re-sort import code to export a `createApp` func)
@@ -74,10 +79,11 @@ export default defineConfig({
   - [ ] xstate
   - [ ] rxjs
     - https://cn.vuejs.org/guide/extras/reactivity-in-depth.html#rxjs
-  - [ ] query (swr/useReactQuery)
+  - [ ] query (swr/useReactQuery or https://redux-toolkit.js.org/rtk-query/overview)
   - [ ] layout
   - [ ] Design Patterns
   - [ ] polyfill
+  - check other lib in unimport/unplugin-auto-import's preset
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-vue

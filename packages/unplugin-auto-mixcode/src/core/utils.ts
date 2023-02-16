@@ -5,6 +5,7 @@ import {
 } from "node:fs/promises";
 import { dirname } from "node:path";
 
+import type { ResolverResult } from "@/imports";
 import type { VitePlugin } from "unplugin";
 
 import type {
@@ -115,12 +116,6 @@ export const createSnippetResolver = (snippets: Record<string, Snippet>) => {
       : undefined;
   };
 };
-
-export interface ResolverResult {
-  as?: string;
-  name?: string;
-  from: string;
-}
 
 export type SnippetResolver = ReturnType<typeof createSnippetResolver>;
 

@@ -56,8 +56,8 @@ router.isReady().then(() => {
   return `
 import { ${creator} as create } from "vue";
 const app = create(App, ${rootPropsCode});
-${options.store ? storeCode : ""}
 ${options.router ? createRouter(options.platform, options.router) : ""}
+${options.store ? storeCode : ""}
 ${bootstrapCode}
 `;
 }

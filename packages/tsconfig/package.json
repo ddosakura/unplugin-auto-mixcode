@@ -1,6 +1,6 @@
 {
   "name": "@mixcode/tsconfig",
-  "repository": "https://github.com/ddosakura/unplugin-auto-mixcode.git",
+  "repository": "https://github.com/ddosakura/unplugin-auto-mixcode/tree/master/packages/tsconfig#readme",
   "author": "ddosakura",
   "version": "0.0.0",
   "devDependencies": {

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 const store = useCounterStore()
+const { count } = storeToRefs(store)
+const { increment } = store
 </script>
 
 <template>
   <div class="about">
     <h1>This is an about page</h1>
-    <button @click="store.increment">{{ store.count }}</button>
+    <button @click="increment">{{ count }}</button>
   </div>
 </template>
 

@@ -61,5 +61,8 @@
     "minimatch": "^6.1.10",
     "unplugin": "^1.0.1",
     "vite-plugin-pages": "^0.28.0"
+  },
+  "devDependencies": {
+    "unplugin-auto-import": "^0.13.0"
   }
 }
