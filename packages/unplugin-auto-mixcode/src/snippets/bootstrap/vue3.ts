@@ -1,13 +1,20 @@
-import { type Platform, getRouterPackage } from "@/snippets/shared";
+import { getRouterPackage } from "@/snippets/shared";
 
-import type { BootstrapOptions, RouterType } from "./common";
+import {
+  type BootstrapOptions,
+  type BootstrapPlugin,
+  type RouterType,
+  createBootstrapPlugin,
+  parseBootstrapPlugins,
+} from "./common";
 
-const storeCode = `
-import { createPinia } from "pinia";
-app.use(createPinia());
-`;
+// === router ===
 
-const createRouter = (rawPlatform: Platform, routerType: RouterType) => {
+const createRouterPlugin = ({
+  platform: rawPlatform,
+  router: routerType,
+}: BootstrapOptions) => {
+  if (!routerType) return;
   const platform = rawPlatform === "hippy" ? rawPlatform : "web";
   const creator =
     platform === "hippy"
@@ -18,46 +25,58 @@ const createRouter = (rawPlatform: Platform, routerType: RouterType) => {
       ? "createMemoryHistory"
       : "createWebHashHistory";
   const pkg = getRouterPackage("vue", platform);
-  return `
-import { createRouter, ${creator} as createHistory } from "${pkg}";
-
+  return createBootstrapPlugin({
+    imports: `import { createRouter, ${creator} as createHistory } from "${pkg}";`,
+    scripts: `
 import routes from "~mixcode/pages";
 const router = createRouter({
   history: createHistory(),
   routes,
 });
-
 app.use(router);
-`;
+`,
+  });
 };
 
-export function bootstrapVue3(options: BootstrapOptions) {
-  const mountCode = `app.mount("#${options.root}");`;
-  const bootstrapCode =
-    options.platform === "hippy"
-      ? `
-app.$start().then(({ superProps, rootViewId }) => {
-  ${options.router ? `router.push("/");` : ""}
-  ${mountCode}
-})
-`
-      : options.router
-      ? `
-router.isReady().then(() => {
-  ${mountCode}
-});
-`
-      : mountCode;
+// === store ===
 
+const storePlugin = <BootstrapPlugin>{
+  imports: `import { createPinia } from "pinia";`,
+  scripts: "app.use(createPinia());",
+};
+
+// === platform & ssr ===
+
+const createAppPlugin = (options: BootstrapOptions) => {
   const creator =
     options.platform === "web" && options.ssr ? "createSSRApp" : "createApp";
   const rootPropsCode =
     options.platform === "hippy" ? `{ appName: "${options.name}" }` : "{}";
-  return `
-import { ${creator} as create } from "vue";
-const app = create(App, ${rootPropsCode});
-${options.router ? createRouter(options.platform, options.router) : ""}
-${options.store ? storeCode : ""}
-${bootstrapCode}
+  return createBootstrapPlugin({
+    imports: `import { ${creator} as create } from "vue";`,
+    scripts: `const app = create(App, ${rootPropsCode});`,
+  });
+};
+
+const createStartPlugin = (options: BootstrapOptions) => {
+  if (options.platform === "hippy") {
+    return `
+const { superProps, rootViewId } = await app.$start();
+${options.router ? `router.push("/");` : ""}
 `;
+  }
+  return options.router ? "await router.isReady();" : undefined;
+};
+
+// === bootstrap ===
+
+export function bootstrapVue3(options: BootstrapOptions) {
+  const { imports, scripts } = parseBootstrapPlugins([
+    createAppPlugin(options),
+    createRouterPlugin(options),
+    options.store ? storePlugin : undefined,
+    createStartPlugin(options),
+    `app.mount("#${options.root}");`,
+  ]);
+  return [imports, scripts].join("\n");
 }

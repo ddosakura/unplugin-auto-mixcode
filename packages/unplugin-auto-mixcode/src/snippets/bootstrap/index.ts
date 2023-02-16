@@ -18,6 +18,12 @@ const DEFAULT_APP_PATH = {
   vue2: "/src/App.vue",
 } satisfies Record<Framework, string>;
 
+const DEFAULT_STORE = {
+  react: undefined,
+  vue: "pinia",
+  vue2: "pinia",
+} satisfies Record<Framework, BootstrapOptions["store"]>;
+
 export const snippetBootstrap: Snippet = {
   dependencies: {
     // "vite-plugin-pages": { optional: true },
@@ -56,7 +62,7 @@ export const snippetBootstrap: Snippet = {
       const options: BootstrapOptions = {
         platform: getPlatform(framework),
         router: getRouterType(router),
-        store: typeof store !== "undefined",
+        store: store === "" ? DEFAULT_STORE[framework] : (store as undefined),
         ssr: typeof ssr !== "undefined",
         root,
         name,

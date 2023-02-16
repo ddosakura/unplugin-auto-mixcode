@@ -1,14 +1,19 @@
-import { type Platform, getRouterPackage } from "@/snippets/shared";
+import { getRouterPackage } from "@/snippets/shared";
 
-import type { BootstrapOptions, RouterType } from "./common";
+import {
+  type BootstrapOptions,
+  type BootstrapPlugin,
+  createBootstrapPlugin,
+  parseBootstrapPlugins,
+} from "./common";
 
-const storeCode = `
-import { PiniaVuePlugin, createPinia } from "pinia";
-Vue.use(PiniaVuePlugin);
-const pinia = createPinia();
-`;
+// === router ===
 
-const createRouter = (rawPlatform: Platform, routerType: RouterType) => {
+const createRouterPlugin = ({
+  platform: rawPlatform,
+  router: routerType,
+}: BootstrapOptions) => {
+  if (!routerType) return;
   const platform = rawPlatform === "hippy" ? rawPlatform : "web";
   const mode =
     platform === "hippy"
@@ -19,16 +24,32 @@ const createRouter = (rawPlatform: Platform, routerType: RouterType) => {
       ? "abstract"
       : "hash";
   const pkg = getRouterPackage("vue", platform);
-  return `
+  return createBootstrapPlugin({
+    imports: `
 import VueRouter from "${pkg}";
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 import routes from "~mixcode/pages";
+`,
+    scripts: `
 const router = new VueRouter({
   ${mode ? `mode: "${mode}",` : ""}
   routes,
 });
-`;
+`,
+  });
 };
+
+// === store ===
+
+const storePlugin = <BootstrapPlugin>{
+  imports: `
+import { PiniaVuePlugin, createPinia } from "pinia";
+Vue.use(PiniaVuePlugin);
+`,
+  scripts: "const pinia = createPinia();",
+};
+
+// === platform & ssr ===
 
 const createApp = (options: BootstrapOptions, inject = "") => `
 const app = new Vue({
@@ -39,24 +60,34 @@ const app = new Vue({
 });
 `;
 
-export function bootstrapVue2(options: BootstrapOptions) {
-  const bootstrapCode =
-    options.platform === "hippy"
-      ? createApp(
-          options,
-          `appName: "${options.name}", rootView: "#${options.root}",`,
-        )
-      : options.router
-      ? `
+const createPlatformPlugin = (options: BootstrapOptions) => {
+  if (options.platform === "hippy") {
+    return createApp(
+      options,
+      `appName: "${options.name}", rootView: "#${options.root}",`,
+    );
+  }
+  return options.router
+    ? `
 ${createApp(options)}
 // router.onReady(() => app.$mount("#${options.root}"));
 app.$mount("#${options.root}");
 `
-      : createApp(options, `el: "#${options.root}",`);
+    : createApp(options, `el: "#${options.root}",`);
+};
+
+// === bootstrap ===
+
+export function bootstrapVue2(options: BootstrapOptions) {
+  const { imports, scripts } = parseBootstrapPlugins([
+    createRouterPlugin(options),
+    storePlugin,
+    createPlatformPlugin(options),
+  ]);
+
   return `
 import Vue from "${options.platform === "hippy" ? "@hippy/vue" : "vue"}";
-${options.router ? createRouter(options.platform, options.router) : ""}
-${options.store ? storeCode : ""}
-${bootstrapCode} 
+${imports}
+${scripts}
 `;
 }

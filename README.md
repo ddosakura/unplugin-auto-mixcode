@@ -40,16 +40,6 @@ export default defineConfig({
 
 - [blocks](./packages/unplugin-auto-mixcode/src/snippets/blocks/README.md)
 - [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
-  - [x] router
-  - [ ] store
-    - [ ] react
-      - Pinia + https://github.com/antfu/reactivue
-      - Redux `@/features/counter/counterSlice`
-      - Mobx
-      - Recoil
-      - Jotai
-    - [x] vue
-    - [x] vue2
   - [ ] ssr (need re-sort import code to export a `createApp` func)
     - https://cn.vitejs.dev/guide/ssr.html
     - https://vite-plugin-ssr.com/routing
@@ -84,6 +74,8 @@ export default defineConfig({
   - [ ] Design Patterns
   - [ ] polyfill
   - check other lib in unimport/unplugin-auto-import's preset
+  - [ ] redux **list from `@/features/counter/counterSlice` like router**
+  - [ ] pinia `useCounterStore = $defineStore(() => {` => `useCounterStore = defineStore("counter", () => {`
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-vue
