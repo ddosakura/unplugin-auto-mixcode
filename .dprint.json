@@ -1,0 +1,35 @@
+{
+  "incremental": true,
+  "typescript": {
+    "deno": true,
+    "module.sortImportDeclarations": "caseInsensitive",
+    "module.sortExportDeclarations": "caseInsensitive"
+  },
+  "markdown": {
+    "deno": true
+  },
+  "json": {
+    "deno": true
+  },
+  "includes": [
+    "**/*.{ts,tsx,js,jsx,json,md,toml,rs}"
+  ],
+  "excludes": [
+    ".tmp",
+    "components.d.ts",
+    "auto-mixcode.d.ts",
+    "auto-imports.d.ts",
+    "**/*-lock.json",
+    "**/node_modules",
+    ".pnpm-store",
+    ".changeset",
+    ".git"
+  ],
+  "plugins": [
+    "https://plugins.dprint.dev/typescript-0.81.1.wasm",
+    "https://plugins.dprint.dev/json-0.17.0.wasm",
+    "https://plugins.dprint.dev/markdown-0.15.2.wasm",
+    "https://plugins.dprint.dev/toml-0.5.4.wasm",
+    "https://plugins.dprint.dev/exec-0.3.5.json@d687dda57be0fe9a0088ccdaefa5147649ff24127d8b3ea227536c68ee7abeab"
+  ]
+}

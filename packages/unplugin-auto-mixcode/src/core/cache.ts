@@ -107,7 +107,7 @@ export const createCacheStore = async (options: CreateCacheStoreOptions) => {
         const text = stringify(cacheObject, undefined, 2);
         if (lastCacheText === text) return;
         lastCacheText = text;
-        await writeFile(cachePath, text);
+        await writeFile(cachePath, `${text}\n`);
       })(),
       (async () => {
         if (!dts) return;

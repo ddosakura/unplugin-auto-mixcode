@@ -78,7 +78,6 @@ app.$mount("#${options.root}");
 // === bootstrap ===
 
 export function bootstrapVue2(options: BootstrapOptions) {
-  console.log("options", options);
   const { imports, scripts } = parseBootstrapPlugins([
     createRouterPlugin(options),
     options.store ? storePlugin : undefined,

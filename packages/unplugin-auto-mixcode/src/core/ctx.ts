@@ -1,5 +1,6 @@
 import type { FSWatcher } from "node:fs";
 
+import { toArray } from "@antfu/utils";
 import { createFilter } from "@rollup/pluginutils";
 import { isPackageExists } from "local-pkg";
 import MagicString from "magic-string";
@@ -56,33 +57,7 @@ export class Context {
         snippet.virtual.dts = wrapDtsFn(scope, snippet.virtual.dts);
       }
       if (!snippet.dependencies) return;
-      const dependencies = Array.isArray(snippet.dependencies)
-        ? snippet.dependencies
-        : [snippet.dependencies];
-      dependencies.forEach((dep) => {
-        const deps = typeof dep === "string"
-          ? {
-            [dep]: {
-              optional: undefined,
-              snippet: undefined,
-              msg: undefined,
-            },
-          }
-          : dep;
-        Object.entries(deps).forEach(([name, { optional, snippet, msg }]) => {
-          const isExists = snippet
-            ? snippetNames.includes(name)
-            : isPackageExists(name);
-          if (isExists) return;
-          warn(
-            `Snippet '${scope}'`,
-            msg ??
-              `${optional ? "may" : "must"} be dependent on ${
-                snippet ? "Snippet " : ""
-              }'${name}'`,
-          );
-        });
-      });
+      this.checkDependencies(snippet.dependencies, scope, snippetNames);
     });
     this.#snippets = snippets;
     this.#resolver = createSnippetResolver(snippets);
@@ -112,6 +87,40 @@ export class Context {
   #resolver?: SnippetResolver;
   resolver(name: string) {
     return this.#resolver?.(name);
+  }
+
+  checkDependencies(
+    dependencies: NonNullable<Snippet["dependencies"]>,
+    snippetType: string,
+    snippets?: Record<string, Snippet<any>> | string[],
+  ) {
+    const snippetNames = Array.isArray(snippets)
+      ? snippets
+      : Object.keys(snippets ?? this.#snippets);
+    toArray(dependencies).forEach((dep) => {
+      const deps = typeof dep === "string"
+        ? {
+          [dep]: {
+            optional: undefined,
+            snippet: undefined,
+            msg: undefined,
+          },
+        }
+        : dep;
+      Object.entries(deps).forEach(([name, { optional, snippet, msg }]) => {
+        const isExists = snippet
+          ? snippetNames.includes(name)
+          : isPackageExists(name);
+        if (isExists) return;
+        warn(
+          `Snippet '${snippetType}'`,
+          msg ??
+            `${optional ? "may" : "must"} be dependent on ${
+              snippet ? "Snippet " : ""
+            }'${name}'`,
+        );
+      });
+    });
   }
 
   get snippetContext(): SnippetContext {

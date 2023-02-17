@@ -55,6 +55,7 @@ export default createUnplugin<Options>((options = {}) => {
     },
 
     async resolveId(id, importer, options) {
+      // linked: https://github.com/antfu/unplugin-auto-import/issues/233
       if (id === "~mixcode") {
         return `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`;
       }

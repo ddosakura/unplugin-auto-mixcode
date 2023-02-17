@@ -1,9 +1,9 @@
 {
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.defaultFormatter": "dprint.dprint",
   "[json][jsonc][javascript][typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "dprint.dprint"
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
