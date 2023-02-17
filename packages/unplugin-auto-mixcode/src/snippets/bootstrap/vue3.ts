@@ -55,18 +55,34 @@ const createAppPlugin = (options: BootstrapOptions) => {
     : "{}";
   return createBootstrapPlugin({
     imports: `import { ${creator} as create } from "vue";`,
-    scripts: `const app = create(App, ${rootPropsCode});`,
+    scripts: () => ({
+      script: `const app = create(App, ${rootPropsCode});`,
+      app: `app.mount("#${options.root}");`,
+    }),
   });
 };
 
 const createStartPlugin = (options: BootstrapOptions) => {
   if (options.platform === "hippy") {
-    return `
-const { superProps, rootViewId } = await app.$start();
-${options.router ? `router.push("/");` : ""}
-`;
+    return createBootstrapPlugin({
+      scripts: (app) => `
+app.$start().then(({ superProps, rootViewId }) => {
+  ${options.router ? `router.push("/");` : ""}
+  ${app}
+})
+`,
+    });
   }
-  return options.router ? "await router.isReady();" : undefined;
+  return createBootstrapPlugin({
+    scripts: (app) =>
+      options.router
+        ? `
+router.isReady().then(() => {
+  ${app}
+});
+`
+        : app,
+  });
 };
 
 // === bootstrap ===
@@ -77,7 +93,6 @@ export function bootstrapVue3(options: BootstrapOptions) {
     createRouterPlugin(options),
     options.store ? storePlugin : undefined,
     createStartPlugin(options),
-    `app.mount("#${options.root}");`,
   ]);
   return [imports, scripts].join("\n");
 }

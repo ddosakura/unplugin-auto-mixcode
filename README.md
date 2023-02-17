@@ -82,6 +82,7 @@ export default defineConfig({
     > `useCounterStore = defineStore("counter", () => {`
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
+  - [ ] glue-preact
   - [ ] glue-vue
   - [ ] glue-vue2
   - [ ] glue-solid

@@ -29,15 +29,6 @@
             "foo/bar"
           ]
         }
-      ],
-      [
-        "virtual:mixcode/bootstrap/index?unocss&import=/src/index.css&router.tsx",
-        {
-          "instanceof": "Set",
-          "value": [
-            "pages/index"
-          ]
-        }
       ]
     ]
   }

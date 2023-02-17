@@ -3,7 +3,13 @@ import { join, relative, resolve } from "node:path";
 import { throttle } from "@antfu/utils";
 
 import type { Snippet, SnippetContext } from "./types";
-import { readFile, readJSONFile, stringify, writeFile } from "./utils";
+import {
+  PREFIX_MIXCODE_VIRTUAL_MODULE,
+  readFile,
+  readJSONFile,
+  stringify,
+  writeFile,
+} from "./utils";
 
 type SourceFile = string;
 type IdentifierWithScope = `${string}/${string}`;
@@ -29,7 +35,6 @@ const scanCacheImport = async (
     const id = token.split("/").at(1);
     if (id && source.includes(id)) return;
     // TODO: Handles the removal of the virtual module cache imported by the macro
-    // TODO: import from `virtual:mixcode/` may needless
     tokens.delete(token);
   });
   if (tokens.size === 0) {
@@ -119,6 +124,7 @@ export const createCacheStore = async (options: CreateCacheStoreOptions) => {
   writeConfigFilesThrottled();
 
   const getIdSet = (importer: string) => {
+    if (importer.startsWith(PREFIX_MIXCODE_VIRTUAL_MODULE)) return;
     const { imports } = cacheObject;
     const s = imports.get(importer);
     if (s) return s;
@@ -131,6 +137,7 @@ export const createCacheStore = async (options: CreateCacheStoreOptions) => {
     importer: string,
   ) => {
     const s = getIdSet(relative(root, importer));
+    if (!s) return;
     s.add(idWithScope);
     writeConfigFilesThrottled();
   };
