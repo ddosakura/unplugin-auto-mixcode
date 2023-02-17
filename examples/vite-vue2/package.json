@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "build": "vite build",
+    "lint": "eslint --ext .ts,tsx,vue ./src --fix"
   },
   "dependencies": {
     "vue": "2.7",

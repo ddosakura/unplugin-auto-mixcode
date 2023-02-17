@@ -26,7 +26,7 @@ export interface BootstrapOptions {
    * optional react app container component path, can get initial props in some case
    *
    * @link https://hippyjs.org/#/hippy-react/introduction?id=%e5%88%9d%e5%a7%8b%e5%8c%96
-   **/
+   */
   container?: string;
 }
 
@@ -41,8 +41,7 @@ export type BootstrapPlugin = Partial<CommonPlugin> | string;
 
 export const createBootstrapPlugin = (
   scripts: BootstrapPlugin = "",
-): Partial<CommonPlugin> =>
-  typeof scripts === "string" ? { scripts } : scripts;
+): Partial<CommonPlugin> => typeof scripts === "string" ? { scripts } : scripts;
 
 export const parseBootstrapPlugins = (
   rawPlugins: Arrayable<BootstrapPlugin | undefined>,

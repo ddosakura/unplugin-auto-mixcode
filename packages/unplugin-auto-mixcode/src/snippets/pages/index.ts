@@ -3,9 +3,9 @@ import { resolve } from "node:path";
 import { slash } from "@antfu/utils";
 import {
   PageContext,
+  reactResolver,
   type ResolvedOptions,
   type UserOptions,
-  reactResolver,
   vueResolver,
 } from "vite-plugin-pages";
 
@@ -15,7 +15,8 @@ import { Watcher } from "@/core/watcher";
 import { MIXCODE_BASIC_BLOCK_IDS } from "@/snippets/blocks";
 import { getRouterPackage } from "@/snippets/shared";
 
-export interface SnippetPagesOptions extends UserOptions {}
+// export interface SnippetPagesOptions extends UserOptions {}
+export type SnippetPagesOptions = UserOptions;
 
 function isPagesDir(path: string, options: ResolvedOptions) {
   for (const page of options.dirs) {
@@ -70,17 +71,20 @@ export const snippetPages = (
             case "add": {
               const ctx = await getPageContext(this);
               const page = ctx.options.dirs.find((i) =>
-                path.startsWith(slash(resolve(this.root, i.dir))),
+                path.startsWith(slash(resolve(this.root, i.dir)))
               )!;
               await ctx.addPage(path, page);
+              break;
             }
             case "unlink": {
               const ctx = await getPageContext(this);
               await ctx.removePage(path);
+              break;
             }
             case "change": {
               const page = ctx.pageRouteMap.get(path);
               if (page) await ctx.options.resolver.hmr?.changed?.(ctx, path);
+              break;
             }
           }
           return {
@@ -94,8 +98,9 @@ export const snippetPages = (
     // `~mixcode/pages`
     virtual: {
       resolveId(id) {
-        if (routeBlockQueryRE.test(id))
+        if (routeBlockQueryRE.test(id)) {
           return MIXCODE_BASIC_BLOCK_IDS.empty_object;
+        }
       },
       async load(this) {
         const ctx = await getPageContext(this);

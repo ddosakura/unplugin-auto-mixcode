@@ -10,7 +10,6 @@ import { Teleport, type TeleportProps } from "./teleport";
 import type { PropsType } from "./types";
 
 type OmitPromiseProps<P> = Omit<P, "onResolve" | "onReject">;
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 type ResolveValueType<P> = P extends { onResolve: (value: infer V) => any } ? V
   : unknown;
 
@@ -39,7 +38,6 @@ export function usePromisifyDialog<P>(
 ) {
   const [impl, setImpl] = useState<ReactNode>();
   const lastContext = useRef<{
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
     reject: (reason?: any) => void;
     cleanup: () => void;
   }>();
@@ -77,7 +75,6 @@ export function usePromisifyDialog<P>(
         resolve(value);
         cleanup();
       };
-      // rome-ignore lint/suspicious/noExplicitAny: <explanation>
       const handleReject = (reason?: any) => {
         if (lastContext.current?.reject !== reject) return;
         setImpl(null);
@@ -86,6 +83,7 @@ export function usePromisifyDialog<P>(
       };
 
       const impl = (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         <Component
           {...props}
@@ -95,7 +93,7 @@ export function usePromisifyDialog<P>(
       );
       setImpl(impl);
     });
-  }, [impl, setImpl]);
+  }, [Component, impl]);
   return [
     impl ? <Teleport {...initialTeleportProps}>{impl}</Teleport> : null,
     open,

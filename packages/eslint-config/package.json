@@ -1,0 +1,21 @@
+{
+  "name": "@mixcode/eslint-config",
+  "repository": "https://github.com/ddosakura/unplugin-auto-mixcode/tree/master/packages/eslint-config#readme",
+  "author": "ddosakura",
+  "version": "0.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "@vue/eslint-config-typescript": "^11.0.2",
+    "eslint": "^8.34.0",
+    "eslint-config-next": "^13.1.6",
+    "eslint-config-turbo": "^0.0.7",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-vue": "^9.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}

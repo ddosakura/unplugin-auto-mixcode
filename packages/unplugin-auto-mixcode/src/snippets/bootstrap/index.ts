@@ -52,8 +52,9 @@ export const snippetBootstrap: Snippet = {
         container,
       },
     ) {
-      const framework =
-        rawFramework === "index" ? this.framework : (rawFramework as Framework);
+      const framework = rawFramework === "index"
+        ? this.framework
+        : (rawFramework as Framework);
       const appPath = app ?? DEFAULT_APP_PATH[framework];
       if (!appPath) {
         return `console.warn('[mixcode] unknown framework ${framework}');`;

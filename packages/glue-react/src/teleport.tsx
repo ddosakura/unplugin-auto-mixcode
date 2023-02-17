@@ -11,9 +11,9 @@ export const Teleport: FC<TeleportProps & { children: ReactNode }> = ({
   disabled,
   children,
 }) => {
-  const root = typeof to === "string" ? document.getElementById(to) : to;
   const el = useMemo(() => document.createElement("div"), []);
   useEffect(() => {
+    const root = typeof to === "string" ? document.getElementById(to) : to;
     if (!root) {
       console.warn("[Teleport]", `Element "${to}" not found in document`);
       return;
@@ -22,6 +22,6 @@ export const Teleport: FC<TeleportProps & { children: ReactNode }> = ({
     return () => {
       root.removeChild(el);
     };
-  }, [root, el]);
+  }, [to, el]);
   return disabled ? <>{children}</> : createPortal(children, el);
 };

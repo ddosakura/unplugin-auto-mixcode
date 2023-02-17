@@ -18,7 +18,6 @@ import type {
 
 export const PLUGIN_NAME = "unplugin-auto-mixcode";
 
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const warn = (...args: any[]) =>
   console.warn(`[${PLUGIN_NAME}]`, ...args);
 
@@ -28,7 +27,7 @@ type ConfigResolvedFn = UnwrapObjectHook<
 
 export function checkUnimportPlugn(config: Parameters<ConfigResolvedFn>[0]) {
   const plugin = config.plugins.find((p) =>
-    ["unimport", "unplugin-auto-import"].includes(p.name),
+    ["unimport", "unplugin-auto-import"].includes(p.name)
   );
   if (!plugin) {
     warn("recommend to work with unimport/unplugin-auto-import");
@@ -42,7 +41,7 @@ export function checkReactPlugin(config: Parameters<ConfigResolvedFn>[0]) {
 
 export function checkVuePlugin(config: Parameters<ConfigResolvedFn>[0]) {
   return config.plugins.find((p) =>
-    ["vite:vue", "unplugin-vue"].includes(p.name),
+    ["vite:vue", "unplugin-vue"].includes(p.name)
   );
 }
 
@@ -64,7 +63,6 @@ export const normalizeStringOption = (
   defaultValue: string,
 ) => (value === true ? defaultValue : value);
 
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const isFrameworkSnippet = (snippet: any): snippet is FrameworkSnippet =>
   snippet.react ||
   snippet.vue ||
@@ -105,14 +103,14 @@ export const createSnippetResolver = (snippets: Record<string, Snippet>) => {
   const list = Object.entries(snippets);
   return (name: string): ResolverResult | undefined => {
     const result = list.find(([, snippet]) =>
-      snippet.virtual?.resolve?.(name) ? snippet : undefined,
+      snippet.virtual?.resolve?.(name) ? snippet : undefined
     );
     return result
       ? {
-          name: "default",
-          as: name,
-          from: `${PREFIX_MIXCODE_VIRTUAL_MODULE}${result[0]}/${name}`,
-        }
+        name: "default",
+        as: name,
+        from: `${PREFIX_MIXCODE_VIRTUAL_MODULE}${result[0]}/${name}`,
+      }
       : undefined;
   };
 };
@@ -131,9 +129,7 @@ export async function readFile(filePath: string) {
 }
 
 export const stringify = (
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   value: any,
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   replacer = (_key: string, value: any) => {
     if (value instanceof Map) {
       return {
@@ -155,7 +151,6 @@ export const stringify = (
 
 export const parse = (
   text: string,
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   reviver = (_key: string, value: any) => {
     if (typeof value === "object" && value !== null) {
       if (value.instanceof === "Map") {

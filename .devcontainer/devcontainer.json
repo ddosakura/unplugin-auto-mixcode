@@ -5,12 +5,13 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "dbaeumer.vscode-eslint",
         "denoland.vscode-deno",
         "eamodio.gitlens",
         "mutantdino.resourcemonitor",
         "antfu.unocss",
-        "rome.rome",
-        "vue.volar"
+        "vue.volar",
+        "Vue.vscode-typescript-vue-plugin"
       ],
       "settings": {
         "editor.fontFamily": "Cascadia Code, Consolas, 'Courier New', monospace",

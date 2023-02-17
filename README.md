@@ -63,19 +63,23 @@ export default defineConfig({
 ## Roadmap
 
 - features
+  - [x] mixcodeImports
   - [ ] support unimport's addon
 - snippets
   - [ ] immer
   - [ ] xstate
   - [ ] rxjs
     - https://cn.vuejs.org/guide/extras/reactivity-in-depth.html#rxjs
-  - [ ] query (swr/useReactQuery or https://redux-toolkit.js.org/rtk-query/overview)
+  - [ ] query
+    > (swr/useReactQuery or https://redux-toolkit.js.org/rtk-query/overview)
   - [ ] layout
   - [ ] Design Patterns
   - [ ] polyfill
   - check other lib in unimport/unplugin-auto-import's preset
   - [ ] redux **list from `@/features/counter/counterSlice` like router**
-  - [ ] pinia `useCounterStore = $defineStore(() => {` => `useCounterStore = defineStore("counter", () => {`
+  - [ ] pinia
+    > `useCounterStore = $defineStore(() => {` =>
+    > `useCounterStore = defineStore("counter", () => {`
 - packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-vue

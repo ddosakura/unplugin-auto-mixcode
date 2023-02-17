@@ -13,20 +13,21 @@ import type {
   SnippetContext,
 } from "./types";
 import {
-  PREFIX_MIXCODE_VIRTUAL_MODULE,
-  type SnippetResolver,
-  type URI,
   createSnippetResolver,
   createURI,
   parseSnippets,
+  PREFIX_MIXCODE_VIRTUAL_MODULE,
+  type SnippetResolver,
   stripSuffix,
+  type URI,
   warn,
 } from "./utils";
 import type { Watcher } from "./watcher";
 
 type DtsFn = NonNullable<NonNullable<Snippet["virtual"]>["dts"]>;
 
-const DECLARE_VIRTUAL_MODULE = `declare module "${PREFIX_MIXCODE_VIRTUAL_MODULE}`;
+const DECLARE_VIRTUAL_MODULE =
+  `declare module "${PREFIX_MIXCODE_VIRTUAL_MODULE}`;
 
 const wrapDtsFn = (scope: string, fn: DtsFn): DtsFn =>
   async function (this: SnippetContext, id: string) {
@@ -59,16 +60,15 @@ export class Context {
         ? snippet.dependencies
         : [snippet.dependencies];
       dependencies.forEach((dep) => {
-        const deps =
-          typeof dep === "string"
-            ? {
-                [dep]: {
-                  optional: undefined,
-                  snippet: undefined,
-                  msg: undefined,
-                },
-              }
-            : dep;
+        const deps = typeof dep === "string"
+          ? {
+            [dep]: {
+              optional: undefined,
+              snippet: undefined,
+              msg: undefined,
+            },
+          }
+          : dep;
         Object.entries(deps).forEach(([name, { optional, snippet, msg }]) => {
           const isExists = snippet
             ? snippetNames.includes(name)
@@ -88,11 +88,11 @@ export class Context {
     this.#resolver = createSnippetResolver(snippets);
     this.#macro = Object.entries(snippets)
       .map(([name, { macro }]) => {
-        // rome-ignore lint/suspicious/noExplicitAny: <explanation>
         return (macro ? [name, macro!] : undefined) as any;
       })
       .filter(Boolean);
     this.#watchers = Object.values(snippets)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       .map(({ createWatcher }) => createWatcher?.call(this.snippetContext)!)
       .filter(Boolean);
   }
@@ -139,7 +139,6 @@ export class Context {
   #macro: Array<[string, NonNullable<Snippet["macro"]>]> = [];
   async transform(code: string, id: string) {
     const s = new MagicString(code);
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
     const contexts = new Map<string, any>();
     s.replace(/\/\*\*([\s\S]*?)\*\//g, (_$0: string, $1: string) => {
       const snippets: string[] = [];
@@ -150,10 +149,9 @@ export class Context {
           const ctx = contexts.get(name);
           const result = macro.call(this.snippetContext, uri.params, s, ctx);
           if (!result) return "";
-          const { code, context } =
-            typeof result === "string"
-              ? { code: result, context: null }
-              : result;
+          const { code, context } = typeof result === "string"
+            ? { code: result, context: null }
+            : result;
           if (typeof code === "string") snippets.push(code);
           contexts.set(name, context ?? ctx);
           return "";
@@ -226,9 +224,11 @@ export class Context {
           return {
             map: { mappings: "" as const },
             code: this.devMode
-              ? `console.warn('[mixcode]', ${JSON.stringify(
+              ? `console.warn('[mixcode]', ${
+                JSON.stringify(
                   id,
-                )}, 'not found.');`
+                )
+              }, 'not found.');`
               : "",
           };
         },
@@ -236,19 +236,17 @@ export class Context {
 
     // Modules will be imported by index.html in "serve" command, but not in "build" command.
     // Filter it by default to eliminate differences.
-    const importer =
-      typeof snippet.importer === "function"
-        ? snippet.importer.call(this.snippetContext)
-        : snippet.importer;
+    const importer = typeof snippet.importer === "function"
+      ? snippet.importer.call(this.snippetContext)
+      : snippet.importer;
     const importerFilter = createFilter(
       importer?.include,
       importer?.exclude || [/\.html$/],
     );
 
-    const suffix =
-      typeof suffixFn === "string"
-        ? suffixFn
-        : suffixFn?.call(this.snippetContext);
+    const suffix = typeof suffixFn === "string"
+      ? suffixFn
+      : suffixFn?.call(this.snippetContext);
     return {
       importerFilter,
       snippetType,
@@ -296,9 +294,9 @@ export class Context {
     }
     return typeof result === "string"
       ? {
-          map: { mappings: "" as const },
-          code: result,
-        }
+        map: { mappings: "" as const },
+        code: result,
+      }
       : result;
   }
   async updateCacheImports(importer: string) {

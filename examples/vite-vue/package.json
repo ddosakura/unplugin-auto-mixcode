@@ -5,6 +5,7 @@
   "scripts": {
     "start": "vite",
     "build": "run-p type-check build-only",
+    "lint": "eslint --ext .ts,tsx,vue ./src --fix",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit"

@@ -56,10 +56,9 @@ export default ({
     if (!scopes) return;
     const entries = Object.entries(scopes);
     const keys = Object.keys(params);
-    const sets =
-      keys.length === 0
-        ? entries
-        : entries.filter(([key]) => key === "_" || keys.includes(key));
+    const sets = keys.length === 0
+      ? entries
+      : entries.filter(([key]) => key === "_" || keys.includes(key));
     const dialogs = sets.flatMap(([, s]) => Array.from(s.values()));
     const code = `${dialogs.join("}{")}`;
     return {
@@ -76,7 +75,8 @@ export default function(props) {
 }
 `;
 
-const tplDts = (componentName: string) => `{
+const tplDts = (componentName: string) =>
+  `{
   import { OpenPromisifyDialog, TeleportProps } from "@mixcode/glue-react";
   export default function (
     teleportProps?: TeleportProps,

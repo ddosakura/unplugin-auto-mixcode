@@ -20,9 +20,9 @@ export interface WatcherOptions {
     type: "unlink" | "add" | "change",
   ): Awaitable<
     | {
-        hmrPayload?: HMRPayload;
-        invalidateModules?: string[];
-      }
+      hmrPayload?: HMRPayload;
+      invalidateModules?: string[];
+    }
     | undefined
   >;
 }

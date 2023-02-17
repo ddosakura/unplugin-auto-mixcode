@@ -16,7 +16,7 @@ export const snippetBlocks: Snippet = {
     load(id: string) {
       return (
         MIXCODE_BASIC_BLOCKS[id as "empty_object"] ??
-        MIXCODE_BASIC_BLOCKS["empty_object"]
+          MIXCODE_BASIC_BLOCKS["empty_object"]
       );
     },
   },

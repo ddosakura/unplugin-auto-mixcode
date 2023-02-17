@@ -1,11 +1,11 @@
 import type { FrameworkSnippet, Preset, Snippet } from "@/core/types";
 import {
-  type SnippetDialogOptions,
-  type SnippetPagesOptions,
   snippetBlocks,
   snippetBootstrap,
   snippetDialog,
+  type SnippetDialogOptions,
   snippetPages,
+  type SnippetPagesOptions,
   snippetRun,
 } from "@/snippets";
 
@@ -27,7 +27,8 @@ export const presetRecommend = ({
   } satisfies Record<string, Snippet | FrameworkSnippet>,
 });
 
-export interface PresetRecommendReactOptions extends PresetRecommendOptions {}
+// export interface PresetRecommendReactOptions extends PresetRecommendOptions {}
+export type PresetRecommendReactOptions = PresetRecommendOptions;
 
 export const presetRecommendReact = ({
   ...options

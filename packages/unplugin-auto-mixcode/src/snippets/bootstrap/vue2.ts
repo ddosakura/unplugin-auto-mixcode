@@ -15,14 +15,13 @@ const createRouterPlugin = ({
 }: BootstrapOptions) => {
   if (!routerType) return;
   const platform = rawPlatform === "hippy" ? rawPlatform : "web";
-  const mode =
-    platform === "hippy"
-      ? undefined
-      : routerType === "browser"
-      ? "history"
-      : routerType === "memory"
-      ? "abstract"
-      : "hash";
+  const mode = platform === "hippy"
+    ? undefined
+    : routerType === "browser"
+    ? "history"
+    : routerType === "memory"
+    ? "abstract"
+    : "hash";
   const pkg = getRouterPackage("vue", platform);
   return createBootstrapPlugin({
     imports: `
@@ -41,7 +40,7 @@ const router = new VueRouter({
 
 // === store ===
 
-const storePlugin = <BootstrapPlugin>{
+const storePlugin = <BootstrapPlugin> {
   imports: `
 import { PiniaVuePlugin, createPinia } from "pinia";
 Vue.use(PiniaVuePlugin);

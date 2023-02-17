@@ -5,13 +5,13 @@ import { createUnplugin } from "unplugin";
 import { Context } from "./ctx";
 import type { Options } from "./types";
 import {
-  PLUGIN_NAME,
-  PREFIX_MIXCODE_VIRTUAL_MODULE,
   checkUnimportPlugn,
   checkVue2Plugin,
   checkVuePlugin,
   createURI,
   normalizeStringOption,
+  PLUGIN_NAME,
+  PREFIX_MIXCODE_VIRTUAL_MODULE,
   snippetsFromPreset,
 } from "./utils";
 
@@ -55,10 +55,12 @@ export default createUnplugin<Options>((options = {}) => {
     },
 
     async resolveId(id, importer, options) {
-      if (id === "~mixcode")
+      if (id === "~mixcode") {
         return `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`;
-      if (importer === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`)
+      }
+      if (importer === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`) {
         return `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__`;
+      }
 
       const result = await ctx.resolveId(id, importer, options);
       if (result) return result;
@@ -71,10 +73,12 @@ export default createUnplugin<Options>((options = {}) => {
       return id.startsWith(PREFIX_MIXCODE_VIRTUAL_MODULE);
     },
     load(id) {
-      if (id === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`)
+      if (id === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__.ts`) {
         return ctx.initScript();
-      if (id === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__`)
+      }
+      if (id === `${PREFIX_MIXCODE_VIRTUAL_MODULE}__init__`) {
         return ctx.initScript(true);
+      }
       return ctx.load(id);
     },
 
@@ -120,7 +124,6 @@ export default createUnplugin<Options>((options = {}) => {
 
     // https://github1s.com/antfu/unplugin-vue-components/blob/HEAD/src/core/unplugin.ts
     webpack(compiler) {
-      // rome-ignore lint/suspicious/noExplicitAny: <explanation>
       let watcher: any; // Watching
       let fileDepQueue: {
         path: string;
@@ -141,7 +144,6 @@ export default createUnplugin<Options>((options = {}) => {
           });
         }
       });
-      // rome-ignore lint/suspicious/noExplicitAny: <explanation>
       compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation: any) => {
         if (fileDepQueue.length) {
           fileDepQueue.forEach(({ path, type }) => {

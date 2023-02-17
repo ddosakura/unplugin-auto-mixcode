@@ -41,7 +41,6 @@ interface ImporterPattern {
  *  `e.g. import 'virtual:mixcode/...'`
  * 2. load virtual module
  */
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export interface Snippet<T = any> {
   dependencies?: Arrayable<
     string | Record<string, { optional?: true; snippet?: true; msg?: string }>
@@ -56,7 +55,7 @@ export interface Snippet<T = any> {
      * for build tool to match other plugin
      *
      * @defaultValue '.ts'
-     **/
+     */
     suffix?: string | ((this: SnippetContext) => string | undefined);
     /** to hijack modules */
     resolveId?(

@@ -40,7 +40,7 @@ const scanCacheImport = async (
 const scanCacheImports = async (cacheObject: CacheObject, root: string) => {
   const { imports } = cacheObject;
   const ps = Array.from(imports.keys()).map((path) =>
-    scanCacheImport(cacheObject, root, path),
+    scanCacheImport(cacheObject, root, path)
   );
   await Promise.all(ps);
 };
@@ -48,7 +48,7 @@ const scanCacheImports = async (cacheObject: CacheObject, root: string) => {
 const getIdentifiers = (cacheObject: CacheObject) => {
   const { imports } = cacheObject;
   const values = Array.from(imports.values()).flatMap((tokens) =>
-    Array.from(tokens.values()),
+    Array.from(tokens.values())
   );
   return Array.from(new Set(values).values()).map(
     (token) => token.split("/") as [string, string],

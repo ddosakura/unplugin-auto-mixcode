@@ -3,7 +3,6 @@ import { getRouterPackage } from "@/snippets/shared";
 import {
   type BootstrapOptions,
   type BootstrapPlugin,
-  type RouterType,
   createBootstrapPlugin,
   parseBootstrapPlugins,
 } from "./common";
@@ -16,17 +15,17 @@ const createRouterPlugin = ({
 }: BootstrapOptions) => {
   if (!routerType) return;
   const platform = rawPlatform === "hippy" ? rawPlatform : "web";
-  const creator =
-    platform === "hippy"
-      ? "createHippyRouter"
-      : routerType === "browser"
-      ? "createWebHistory"
-      : routerType === "memory"
-      ? "createMemoryHistory"
-      : "createWebHashHistory";
+  const creator = platform === "hippy"
+    ? "createHippyRouter"
+    : routerType === "browser"
+    ? "createWebHistory"
+    : routerType === "memory"
+    ? "createMemoryHistory"
+    : "createWebHashHistory";
   const pkg = getRouterPackage("vue", platform);
   return createBootstrapPlugin({
-    imports: `import { createRouter, ${creator} as createHistory } from "${pkg}";`,
+    imports:
+      `import { createRouter, ${creator} as createHistory } from "${pkg}";`,
     scripts: `
 import routes from "~mixcode/pages";
 const router = createRouter({
@@ -40,7 +39,7 @@ app.use(router);
 
 // === store ===
 
-const storePlugin = <BootstrapPlugin>{
+const storePlugin = <BootstrapPlugin> {
   imports: `import { createPinia } from "pinia";`,
   scripts: "app.use(createPinia());",
 };
@@ -48,10 +47,12 @@ const storePlugin = <BootstrapPlugin>{
 // === platform & ssr ===
 
 const createAppPlugin = (options: BootstrapOptions) => {
-  const creator =
-    options.platform === "web" && options.ssr ? "createSSRApp" : "createApp";
-  const rootPropsCode =
-    options.platform === "hippy" ? `{ appName: "${options.name}" }` : "{}";
+  const creator = options.platform === "web" && options.ssr
+    ? "createSSRApp"
+    : "createApp";
+  const rootPropsCode = options.platform === "hippy"
+    ? `{ appName: "${options.name}" }`
+    : "{}";
   return createBootstrapPlugin({
     imports: `import { ${creator} as create } from "vue";`,
     scripts: `const app = create(App, ${rootPropsCode});`,

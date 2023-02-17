@@ -50,7 +50,7 @@
   "scripts": {
     "dev": "tsup --watch src",
     "build": "tsup",
-    "lint": "rome ci --indent-style space src"
+    "lint": "eslint --ext .ts,tsx,vue ./src --fix"
   },
   "dependencies": {
     "@antfu/utils": "^0.7.2",

@@ -1,7 +1,7 @@
 import type { ImportsMap } from "unplugin-auto-import/types";
 
 // https://github.com/antfu/reactivue/blob/master/packages/reactivue/src/index.ts
-export const reactivue = <ImportsMap>{
+export const reactivue = <ImportsMap> {
   reactivue: [
     "useSetup",
     "createSetup",

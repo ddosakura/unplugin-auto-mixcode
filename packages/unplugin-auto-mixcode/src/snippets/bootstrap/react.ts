@@ -1,26 +1,25 @@
-import { type Platform, getRouterPackage } from "@/snippets/shared";
+import { getRouterPackage, type Platform } from "@/snippets/shared";
 
 import {
   type BootstrapOptions,
   type BootstrapPlugin,
-  type RouterType,
   createBootstrapPlugin,
   parseBootstrapPlugins,
+  type RouterType,
 } from "./common";
 
 // === router ===
 
 const byRouterComponent = (platform: Platform, routerType: RouterType) => {
-  const component =
-    platform === "native"
-      ? "NativeRouter"
-      : platform === "hippy"
-      ? "MemoryRouter"
-      : routerType === "browser"
-      ? "BrowserRouter"
-      : routerType === "memory"
-      ? "MemoryRouter"
-      : "HashRouter";
+  const component = platform === "native"
+    ? "NativeRouter"
+    : platform === "hippy"
+    ? "MemoryRouter"
+    : routerType === "browser"
+    ? "BrowserRouter"
+    : routerType === "memory"
+    ? "MemoryRouter"
+    : "HashRouter";
   const pkg = getRouterPackage("react", platform);
   return createBootstrapPlugin({
     imports: `
@@ -42,16 +41,15 @@ const Pages = () => <Router>
 };
 
 const byRouterCreator = (platform: Platform, routerType: RouterType) => {
-  const creator =
-    platform === "native"
-      ? "createNativeRouter"
-      : platform === "hippy"
-      ? "createMemoryRouter"
-      : routerType === "browser"
-      ? "createBrowserRouter"
-      : routerType === "memory"
-      ? "createMemoryRouter"
-      : "createHashRouter";
+  const creator = platform === "native"
+    ? "createNativeRouter"
+    : platform === "hippy"
+    ? "createMemoryRouter"
+    : routerType === "browser"
+    ? "createBrowserRouter"
+    : routerType === "memory"
+    ? "createMemoryRouter"
+    : "createHashRouter";
   const pkg = getRouterPackage("react", platform);
   return createBootstrapPlugin({
     imports: `
@@ -113,8 +111,7 @@ const createStorePlugin = (store: BootstrapOptions["store"]) =>
 const platformReactNative = (name: string) => (app: string) =>
   `AppRegistry.registerComponent("${name}", () => ${app});`;
 
-const platformHippy = (name: string) => (app: string) =>
-  `
+const platformHippy = (name: string) => (app: string) => `
 new Hippy({
   appName: "${name}",
   entryPage: ${app},
@@ -125,8 +122,7 @@ new Hippy({
 }).start();
 `;
 
-const platformReactDom = (root: string) => (app: string) =>
-  `
+const platformReactDom = (root: string) => (app: string) => `
 ReactDOM.createRoot(document.getElementById("${root}") as HTMLElement).render(
   <React.StrictMode>
     <${app} />
@@ -137,32 +133,31 @@ ReactDOM.createRoot(document.getElementById("${root}") as HTMLElement).render(
 const createPlatformPlugin = (options: BootstrapOptions) => {
   const containerPlugin = options.container
     ? createBootstrapPlugin({
-        imports: `import Container from "${options.container}";`,
-        scripts: (app) => ({
-          app: "AppWithContainer",
-          script: `
+      imports: `import Container from "${options.container}";`,
+      scripts: (app) => ({
+        app: "AppWithContainer",
+        script: `
 const AppWithContainer = (props) => <Container {...props}>
   <${app} />
 </Container>
 `,
-        }),
-      })
+      }),
+    })
     : undefined;
-  const platformPlugin =
-    options.platform === "native"
-      ? createBootstrapPlugin({
-          imports: `import { AppRegistry } from "react-native";`,
-          scripts: platformReactNative(options.name),
-        })
-      : options.platform === "hippy"
-      ? createBootstrapPlugin({
-          imports: `import { Hippy } from '@hippy/react';`,
-          scripts: platformHippy(options.name),
-        })
-      : createBootstrapPlugin({
-          imports: `import ReactDOM from "react-dom/client";`,
-          scripts: platformReactDom(options.root),
-        });
+  const platformPlugin = options.platform === "native"
+    ? createBootstrapPlugin({
+      imports: `import { AppRegistry } from "react-native";`,
+      scripts: platformReactNative(options.name),
+    })
+    : options.platform === "hippy"
+    ? createBootstrapPlugin({
+      imports: `import { Hippy } from '@hippy/react';`,
+      scripts: platformHippy(options.name),
+    })
+    : createBootstrapPlugin({
+      imports: `import ReactDOM from "react-dom/client";`,
+      scripts: platformReactDom(options.root),
+    });
   return [containerPlugin, platformPlugin];
 };
 

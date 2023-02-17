@@ -9,5 +9,5 @@
     "vitest.config.*",
     "cypress.config.*",
     "playwright.config.*"
-  ],
+  ]
 }

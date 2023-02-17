@@ -43,4 +43,4 @@ export const getRouterPackage = (
   platform = getPlatform(framework),
 ) =>
   ROUTER_PACKAGES[framework][platform as "web"] ??
-  ROUTER_PACKAGES[framework]["web"];
+    ROUTER_PACKAGES[framework]["web"];
