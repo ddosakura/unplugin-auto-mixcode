@@ -55,7 +55,6 @@ const byRouterCreator = (platform: Platform, routerType: RouterType) => {
     imports: `
 import { ${creator} as createRouter, RouterProvider } from "${pkg}";
 import routes from "~mixcode/pages";
-console.log("[debug routes]", { routes })
 `,
     scripts: (app) => ({
       app: "Pages",

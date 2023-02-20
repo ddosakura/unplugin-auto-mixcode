@@ -14,6 +14,7 @@ import type {
   SnippetContext,
 } from "./types";
 import {
+  byMagicString,
   createSnippetResolver,
   createURI,
   parseSnippets,
@@ -230,16 +231,15 @@ export class Context {
     const { suffix: suffixFn, ...virtual }: NonNullable<Snippet["virtual"]> =
       snippet.virtual ?? {
         load: () => {
-          return {
-            map: { mappings: "" as const },
-            code: this.devMode
+          return byMagicString(
+            this.devMode
               ? `console.warn('[mixcode]', ${
                 JSON.stringify(
                   id,
                 )
               }, 'not found.');`
               : "",
-          };
+          );
         },
       };
 
@@ -301,12 +301,7 @@ export class Context {
     if (dtsText) {
       this.#updateDts(fn, dtsText);
     }
-    return typeof result === "string"
-      ? {
-        map: { mappings: "" as const },
-        code: result,
-      }
-      : result;
+    return typeof result === "string" ? byMagicString(result) : result;
   }
   async updateCacheImports(importer: string) {
     const store = await this.cacheStore;
@@ -315,15 +310,9 @@ export class Context {
 
   async initScript(blank = false) {
     if (blank || !this.devMode) {
-      return {
-        map: { mappings: "" as const },
-        code: "export default ''",
-      };
+      return byMagicString("export default ''");
     }
     const store = await this.cacheStore;
-    return {
-      map: { mappings: "" as const },
-      code: store.autoImportInitScript(),
-    };
+    return byMagicString(store.autoImportInitScript());
   }
 }

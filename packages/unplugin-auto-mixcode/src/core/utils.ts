@@ -5,6 +5,8 @@ import {
 } from "node:fs/promises";
 import { dirname } from "node:path";
 
+import MagicString from "magic-string";
+
 import type { ResolverResult } from "@/imports";
 import type { VitePlugin } from "unplugin";
 
@@ -208,3 +210,11 @@ export function stripSuffix(name: string, suffix: string): string {
 
   return name.slice(0, -suffix.length);
 }
+
+export const byMagicString = (str: string) => {
+  const s = new MagicString(str);
+  return {
+    code: s.toString(),
+    map: s.generateMap(),
+  };
+};

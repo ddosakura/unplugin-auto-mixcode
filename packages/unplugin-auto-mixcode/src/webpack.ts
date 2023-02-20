@@ -1,2 +1,3 @@
 import unplugin from ".";
-export default unplugin.webpack;
+import type { Options } from './core/types'
+export default unplugin.webpack as (options?: Options) => any

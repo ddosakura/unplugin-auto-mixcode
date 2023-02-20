@@ -14,7 +14,10 @@ programming paradigm.
 ```ts
 // vite.config.ts
 
-import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
+import {
+  mixcodeImports,
+  presetRecommend,
+} from "@mixcode/unplugin-auto-mixcode";
 import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
 const mixcode = AutoMixcode({
@@ -24,6 +27,7 @@ const mixcode = AutoMixcode({
 export default defineConfig({
   plugins: [
     AutoImport({
+      imports: mixcodeImports(["reactivue"]),
       resolvers: [mixcode.resolver],
     }),
     mixcode,
@@ -50,11 +54,11 @@ export default defineConfig({
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
   - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
 - [pages](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
-  - [ ] test webpack
+  - **Webpack's hmr is unavailable.**
   - [ ] spa
     - [x] react
     - [x] vue
-    - [ ] vue2
+    - [x] vue2
     - [ ] solid
     - [ ] svelte
   - [ ] mpa
@@ -63,7 +67,6 @@ export default defineConfig({
 ## Roadmap
 
 - features
-  - [x] mixcodeImports
   - [ ] support unimport's addon
 - snippets
   - [ ] immer
