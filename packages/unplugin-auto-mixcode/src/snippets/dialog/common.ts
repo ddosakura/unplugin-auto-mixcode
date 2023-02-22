@@ -5,3 +5,7 @@ export interface SnippetDialogOptions {
 }
 
 export const DEFAULT_SUFFIX = "Dialog";
+
+export const PREFIX = "use$";
+
+export const PREFIX4RE = "use\\$";

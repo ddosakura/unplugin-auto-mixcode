@@ -2,13 +2,13 @@ import type MagicString from "magic-string";
 
 import type { Snippet } from "@/core/types";
 
-import { INJECTED_DIALOG, type SnippetDialogOptions } from "./common";
-
-const PREFIX = "use$";
-
-const PREFIX4RE = "use\\$";
-
-const DEFAULT_SUFFIX = "Dialog";
+import {
+  DEFAULT_SUFFIX,
+  INJECTED_DIALOG,
+  PREFIX,
+  PREFIX4RE,
+  type SnippetDialogOptions,
+} from "./common";
 
 //                                   | scope    |
 const RE_OPEN_FUNC = "([a-zA-Z_]\\w*)(\\$[0-9]+)?";
@@ -25,7 +25,7 @@ function firstInject(s: MagicString, suffix: string) {
       const dialog = `${INJECTED_DIALOG}${index}`;
       scopes[s].add(`typeof ${dialog} === 'undefined' ? null : ${dialog}`);
       const fn = `${$1}${$scope ? $scope : ""}`;
-      return `[${INJECTED_DIALOG}${index}, ${fn}] = ${PREFIX}${$3}${suffix}(`;
+      return `[${dialog}, ${fn}] = ${PREFIX}${$3}${suffix}(`;
     },
   );
   if (counter === 0) return;
@@ -35,7 +35,7 @@ function firstInject(s: MagicString, suffix: string) {
 export default ({
   suffix = DEFAULT_SUFFIX,
 }: Partial<SnippetDialogOptions>): Snippet => ({
-  // ~mixcode/dialog/useXxxDialog
+  // ~mixcode/dialog/use$XxxDialog
   virtual: {
     suffix: ".tsx",
     resolve(name) {

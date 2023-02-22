@@ -19,5 +19,10 @@ const store = useCounterStore()
   <main>
     <TheWelcome />
     <button @click="store.increment">{{ store.count }}</button>
+
+    <div>
+      <ExampleDialog />
+      <ExampleDialog />
+    </div>
   </main>
 </template>

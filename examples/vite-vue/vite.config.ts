@@ -20,6 +20,9 @@ export default defineConfig({
     Inspect(),
     mixcode,
     vue(),
+    // https://marketplace.visualstudio.com/items?itemName=Vue.volar
+    // https://github.com/vuejs/language-tools/issues/2231
+    // https://github.com/antfu/unplugin-vue-components/issues/406
     Components({}),
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],

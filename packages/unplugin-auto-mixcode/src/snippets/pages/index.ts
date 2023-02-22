@@ -131,8 +131,8 @@ const vue = () => {
   const pkg = getRouterPackage("vue");
   return `{
   import type { RouteRecordRaw } from "${pkg}";
-  const routes: RouteRecordRaw[]
-  export default routes
+  const routes: RouteRecordRaw[];
+  export default routes;
 }`;
 };
 
@@ -140,7 +140,7 @@ const vue2 = () => {
   const pkg = getRouterPackage("vue2");
   return `{
   import type { RouteConfig } from "${pkg}";
-  const routes: RouteConfig[]
-  export default routes
+  const routes: RouteConfig[];
+  export default routes;
 }`;
 };

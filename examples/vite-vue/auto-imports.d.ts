@@ -59,6 +59,7 @@ declare global {
   const toRefs: typeof import('vue')['toRefs']
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
+  const use$HelloDialog: typeof import('virtual:mixcode/dialog/use$HelloDialog')['default']
   const useAttrs: typeof import('vue')['useAttrs']
   const useCounterStore: typeof import('./src/stores/counter')['useCounterStore']
   const useCssModule: typeof import('vue')['useCssModule']

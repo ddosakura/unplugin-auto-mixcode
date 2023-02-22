@@ -52,7 +52,6 @@ export default defineConfig({
     - [ ] vue2
       - https://v2.ssr.vuejs.org/zh/guide/
 - [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
-  - [ ] impl vue/useXxxDialog by https://vueuse.org/core/useConfirmDialog/
 - [pages](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
   - **Webpack's hmr is unavailable.**
   - [ ] spa

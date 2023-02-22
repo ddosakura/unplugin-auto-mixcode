@@ -31,8 +31,11 @@ type DtsFn = NonNullable<NonNullable<Snippet["virtual"]>["dts"]>;
 const DECLARE_VIRTUAL_MODULE =
   `declare module "${PREFIX_MIXCODE_VIRTUAL_MODULE}`;
 
-const wrapDtsFn = (scope: string, fn: DtsFn): DtsFn =>
-  async function (this: SnippetContext, id: string) {
+const SYM_WRAP_DTS_FN = Symbol("wrapDtsFn");
+
+const wrapDtsFn = (scope: string, fn: DtsFn): DtsFn => {
+  if ((fn as any)[SYM_WRAP_DTS_FN]) return fn;
+  async function dtsFn(this: SnippetContext, id: string) {
     const raw = await fn.call(this, id);
     if (raw.startsWith("{") && raw.endsWith("}")) {
       return `\n${DECLARE_VIRTUAL_MODULE}${scope}/${id}" ${raw}\n`;
@@ -43,7 +46,10 @@ const wrapDtsFn = (scope: string, fn: DtsFn): DtsFn =>
       .filter(Boolean)
       .join("\n");
     return `\n${DECLARE_VIRTUAL_MODULE}${scope}/${id}" {\n${code}\n}\n`;
-  };
+  }
+  (dtsFn as any)[SYM_WRAP_DTS_FN] = true;
+  return dtsFn;
+};
 
 export class Context {
   constructor(private options: ParsedOptions, public devMode = false) {
@@ -169,6 +175,22 @@ export class Context {
       }, $1);
       return snippets.length === 0 ? `/**${$1}*/` : snippets.join("\n");
     });
+    if ((["vue", "vue2"] as Framework[]).includes(this.options.framework)) {
+      s.replace(/<!-- @mixcode (\S+) -->/g, ($0, $1) => {
+        const uri = createURI($1);
+        const name = uri.pathname.slice(1);
+        const macro = this.#macro.find(([n]) => n === name)?.at(1);
+        if (typeof macro !== "function") return $0;
+        const ctx = contexts.get(name);
+        const result = macro.call(this.snippetContext, uri.params, s, ctx);
+        if (!result) return "";
+        const { code, context } = typeof result === "string"
+          ? { code: result, context: null }
+          : result;
+        contexts.set(name, context ?? ctx);
+        return code;
+      });
+    }
     if (!s.hasChanged()) return;
     return {
       code: s.toString(),

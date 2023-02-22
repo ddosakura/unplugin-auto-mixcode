@@ -10,6 +10,15 @@
             "bootstrap/index"
           ]
         }
+      ],
+      [
+        "src/components/examples/ExampleDialog.vue",
+        {
+          "instanceof": "Set",
+          "value": [
+            "dialog/use$HelloDialog"
+          ]
+        }
       ]
     ]
   }

@@ -5,10 +5,11 @@ import {
 } from "node:fs/promises";
 import { dirname } from "node:path";
 
+import { getPackageInfo, isPackageExists } from "local-pkg";
 import MagicString from "magic-string";
+import type { VitePlugin } from "unplugin";
 
 import type { ResolverResult } from "@/imports";
-import type { VitePlugin } from "unplugin";
 
 import type {
   Framework,
@@ -48,8 +49,16 @@ export function checkVuePlugin(config: Parameters<ConfigResolvedFn>[0]) {
 }
 
 export function checkVue2Plugin(config: Parameters<ConfigResolvedFn>[0]) {
-  // https://github.com/vitejs/vite-plugin-vue2
-  return config.plugins.find((p) => p.name === "vite:vue2");
+  return config.plugins.find((p) =>
+    [
+      // 2.7
+      // https://github.com/vitejs/vite-plugin-vue2
+      "vite:vue2",
+      // <= 2.6
+      // https://github.com/underfin/vite-plugin-vue2
+      "vite-plugin-vue2",
+    ].includes(p.name)
+  );
 }
 
 export function checkSolidPlugin(config: Parameters<ConfigResolvedFn>[0]) {
@@ -218,3 +227,21 @@ export const byMagicString = (str: string) => {
     map: s.generateMap(),
   };
 };
+
+export async function getPkgVersion(
+  pkgName: string,
+  defaultVersion: string,
+): Promise<string> {
+  try {
+    const isExist = isPackageExists(pkgName);
+    if (isExist) {
+      const pkg = await getPackageInfo(pkgName);
+      return pkg?.version ?? defaultVersion;
+    } else {
+      return defaultVersion;
+    }
+  } catch (err) {
+    console.error(err);
+    return defaultVersion;
+  }
+}
