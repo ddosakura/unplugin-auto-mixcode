@@ -1,4 +1,4 @@
-import type { Snippet } from "@/core/types";
+import type { SnippetDefinition } from "@/core/types";
 import { PREFIX_MIXCODE_VIRTUAL_MODULE } from "@/core/utils";
 
 const MIXCODE_BASIC_BLOCKS = {
@@ -11,13 +11,11 @@ export const MIXCODE_BASIC_BLOCK_IDS = Object.fromEntries(
   ),
 ) as unknown as Record<keyof typeof MIXCODE_BASIC_BLOCKS, string>;
 
-export const snippetBlocks: Snippet = {
+export const snippetBlocks: SnippetDefinition = {
   virtual: {
-    load(id: string) {
-      return (
-        MIXCODE_BASIC_BLOCKS[id as "empty_object"] ??
-          MIXCODE_BASIC_BLOCKS["empty_object"]
-      );
+    modules: {
+      ...MIXCODE_BASIC_BLOCKS,
+      default: MIXCODE_BASIC_BLOCKS.empty_object,
     },
   },
 };

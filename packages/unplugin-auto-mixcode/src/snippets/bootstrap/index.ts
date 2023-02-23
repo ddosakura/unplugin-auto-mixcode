@@ -1,4 +1,4 @@
-import type { Framework, Snippet } from "@/core/types";
+import type { Framework, SnippetDefinition } from "@/core/types";
 import { getPlatform } from "@/snippets/shared";
 
 import { type BootstrapOptions, getRouterType } from "./common";
@@ -24,7 +24,7 @@ const DEFAULT_STORE = {
   vue2: "pinia",
 } satisfies Record<Framework, BootstrapOptions["store"]>;
 
-export const snippetBootstrap: Snippet = {
+export const snippetBootstrap: SnippetDefinition = {
   dependencies: {
     // "vite-plugin-pages": { optional: true },
     pages: { optional: true, snippet: true },

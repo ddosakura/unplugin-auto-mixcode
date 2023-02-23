@@ -55,18 +55,20 @@ export default ({
     },
   },
   /** <!-- @mixcode dialog --> */
-  macro(this, _params, s, context?: boolean) {
-    if (context) return;
-    const dialogs = Array.from(firstInject(s, suffix).entries());
-    if (dialogs.length === 0) return;
-    const isVue2 = this.framework === "vue2";
-    const templates = dialogs
-      .map(([ctx, cname]) => tpl(cname, ctx, isVue2))
-      .join("");
-    return {
-      code: templates,
-      context: true,
-    };
+  macro: {
+    scan(s) {
+      const dialogs = Array.from(firstInject(s, suffix).entries());
+      if (dialogs.length === 0) return;
+      return dialogs;
+    },
+    transform(this, _params, _s, dialogs?: [string, string][]) {
+      if (!dialogs) return;
+      const isVue2 = this.framework === "vue2";
+      const templates = dialogs
+        .map(([ctx, cname]) => tpl(cname, ctx, isVue2))
+        .join("");
+      return { code: templates };
+    },
   },
 });
 

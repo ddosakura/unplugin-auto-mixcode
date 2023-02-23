@@ -16,6 +16,8 @@ import type {
   FrameworkSnippet,
   Preset,
   Snippet,
+  SnippetDefinition,
+  SnippetVirtualModuleLoader,
   UnwrapObjectHook,
 } from "./types";
 
@@ -82,20 +84,20 @@ export const isFrameworkSnippet = (snippet: any): snippet is FrameworkSnippet =>
   snippet.svelte;
 
 const getSnippets = (
-  snippet: Snippet | FrameworkSnippet,
+  snippet: SnippetDefinition | FrameworkSnippet,
   framework: Framework,
-): Snippet | undefined =>
+): SnippetDefinition | undefined =>
   isFrameworkSnippet(snippet) ? snippet[framework] : snippet;
 
 export const parseSnippets = (
   framework: Framework,
-  snippets: Record<string, Snippet | FrameworkSnippet> = {},
+  snippets: Record<string, SnippetDefinition | FrameworkSnippet> = {},
 ): Record<string, Snippet> => {
   const entries = Object.entries(snippets)
     .map(([name, snippet]) => {
       const s = getSnippets(snippet, framework);
       return s
-        ? ([name, s] as const)
+        ? ([name, fromSnippetDefinition(s)] as const)
         : (undefined as unknown as [string, Snippet]);
     })
     .filter(Boolean);
@@ -244,4 +246,52 @@ export async function getPkgVersion(
     console.error(err);
     return defaultVersion;
   }
+}
+
+const isSnippetVirtualModuleLoader = (
+  v: any,
+): v is SnippetVirtualModuleLoader => v.load;
+
+function fromSnippetDefinition<T>({
+  dependencies,
+  importer,
+  virtual,
+  macro,
+  createWatcher,
+}: SnippetDefinition<T>): Snippet<T> {
+  return {
+    dependencies,
+    importer(this) {
+      if (typeof importer !== "function") return importer;
+      return importer.call(this);
+    },
+    virtual: typeof virtual === "function" ? { load: virtual } : (() => {
+      if (!virtual) return;
+      if (isSnippetVirtualModuleLoader(virtual)) return virtual;
+      const { resolve, suffix, defaultModuleId = "default", modules } = virtual;
+      const getModule = (id: string) => modules[id] ?? modules[defaultModuleId];
+      return {
+        resolve,
+        suffix,
+        resolveId(this, id, importer, options) {
+          const vm = getModule(id);
+          if (typeof vm !== "object") return;
+          return vm.resolveId?.call(this, importer, options);
+        },
+        load(this, id, params) {
+          const vm = getModule(id);
+          if (typeof vm === "string") return vm;
+          if (typeof vm === "function") return vm.call(this, params);
+          return vm.load?.call(this, params);
+        },
+        dts(this, id) {
+          const vm = getModule(id);
+          if (typeof vm !== "object") return;
+          return vm.dts?.call(this);
+        },
+      };
+    })(),
+    macro: typeof macro === "function" ? { transform: macro } : macro,
+    createWatcher,
+  };
 }

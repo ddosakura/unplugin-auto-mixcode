@@ -31,12 +31,13 @@ type DtsFn = NonNullable<NonNullable<Snippet["virtual"]>["dts"]>;
 const DECLARE_VIRTUAL_MODULE =
   `declare module "${PREFIX_MIXCODE_VIRTUAL_MODULE}`;
 
-const SYM_WRAP_DTS_FN = Symbol("wrapDtsFn");
+const SYM_WRAP_DTS_FN = Symbol();
 
 const wrapDtsFn = (scope: string, fn: DtsFn): DtsFn => {
   if ((fn as any)[SYM_WRAP_DTS_FN]) return fn;
   async function dtsFn(this: SnippetContext, id: string) {
     const raw = await fn.call(this, id);
+    if (!raw) return;
     if (raw.startsWith("{") && raw.endsWith("}")) {
       return `\n${DECLARE_VIRTUAL_MODULE}${scope}/${id}" ${raw}\n`;
     }
@@ -68,9 +69,16 @@ export class Context {
     });
     this.#snippets = snippets;
     this.#resolver = createSnippetResolver(snippets);
+    this.#macroScan = Object.entries(snippets)
+      .map(([name, { macro = {} }]) => {
+        const { scan } = macro;
+        return (scan ? [name, scan!] : undefined) as any;
+      })
+      .filter(Boolean);
     this.#macro = Object.entries(snippets)
-      .map(([name, { macro }]) => {
-        return (macro ? [name, macro!] : undefined) as any;
+      .map(([name, { macro = {} }]) => {
+        const { transform } = macro;
+        return (transform ? [name, transform!] : undefined) as any;
       })
       .filter(Boolean);
     this.#watchers = Object.values(snippets)
@@ -152,10 +160,20 @@ export class Context {
     }
   }
 
-  #macro: Array<[string, NonNullable<Snippet["macro"]>]> = [];
+  #macroScan: Array<
+    [string, NonNullable<NonNullable<Snippet["macro"]>["scan"]>]
+  > = [];
+  #macro: Array<
+    [string, NonNullable<NonNullable<Snippet["macro"]>["transform"]>]
+  > = [];
   async transform(code: string, id: string) {
     const s = new MagicString(code);
     const contexts = new Map<string, any>();
+    this.#macroScan.forEach(([name, scan]) => {
+      const context = scan.call(this.snippetContext, s);
+      if (typeof context === "undefined") return;
+      contexts.set(name, context);
+    });
     s.replace(/\/\*\*([\s\S]*?)\*\//g, (_$0: string, $1: string) => {
       const snippets: string[] = [];
       this.#macro.reduce(($1, [name, macro]) => {
@@ -166,10 +184,10 @@ export class Context {
           const result = macro.call(this.snippetContext, uri.params, s, ctx);
           if (!result) return "";
           const { code, context } = typeof result === "string"
-            ? { code: result, context: null }
+            ? { code: result, context: ctx }
             : result;
           if (typeof code === "string") snippets.push(code);
-          contexts.set(name, context ?? ctx);
+          contexts.set(name, context);
           return "";
         });
       }, $1);

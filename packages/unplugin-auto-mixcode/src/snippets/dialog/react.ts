@@ -51,20 +51,24 @@ export default ({
     },
   },
   /** @mixcode dialog */
-  macro(params, s, context?: Record<string, Set<string>>) {
-    const scopes = context ?? firstInject(s, suffix);
-    if (!scopes) return;
-    const entries = Object.entries(scopes);
-    const keys = Object.keys(params);
-    const sets = keys.length === 0
-      ? entries
-      : entries.filter(([key]) => key === "_" || keys.includes(key));
-    const dialogs = sets.flatMap(([, s]) => Array.from(s.values()));
-    const code = `${dialogs.join("}{")}`;
-    return {
-      code,
-      context: scopes,
-    };
+  macro: {
+    scan(s) {
+      return firstInject(s, suffix);
+    },
+    transform(params, _s, scopes?: ReturnType<typeof firstInject>) {
+      if (!scopes) return;
+      const entries = Object.entries(scopes);
+      const keys = Object.keys(params);
+      const sets = keys.length === 0
+        ? entries
+        : entries.filter(([key]) => key === "_" || keys.includes(key));
+      const dialogs = sets.flatMap(([, s]) => Array.from(s.values()));
+      const code = `${dialogs.join("}{")}`;
+      return {
+        code,
+        context: scopes,
+      };
+    },
   },
 });
 

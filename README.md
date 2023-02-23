@@ -42,8 +42,14 @@ export default defineConfig({
 
 ### Snippets (with Snippet's Roadmap)
 
-- [blocks](./packages/unplugin-auto-mixcode/src/snippets/blocks/README.md)
-- [bootstrap](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
+> _universal_: can be used anywhere
+>
+> _compatible_: can be used in a similar ways in different frameworks
+>
+> _react|vue_: can be used in a similar way in these frameworks
+
+- [blocks _universal_](./packages/unplugin-auto-mixcode/src/snippets/blocks/README.md)
+- [bootstrap _compatible_](./packages/unplugin-auto-mixcode/src/snippets/bootstrap/README.md)
   - [ ] ssr (need re-sort import code to export a `createApp` func)
     - https://cn.vitejs.dev/guide/ssr.html
     - https://vite-plugin-ssr.com/routing
@@ -51,8 +57,8 @@ export default defineConfig({
     - [ ] vue
     - [ ] vue2
       - https://v2.ssr.vuejs.org/zh/guide/
-- [dialog](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
-- [pages](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
+- [dialog _react|vue|vue2_](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
+- [pages _compatible_](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
   - **Webpack's hmr is unavailable.**
   - [ ] spa
     - [x] react
@@ -61,13 +67,14 @@ export default defineConfig({
     - [ ] solid
     - [ ] svelte
   - [ ] mpa
-- [run](./packages/unplugin-auto-mixcode/src/snippets/run/README.md)
+- [run _universal_](./packages/unplugin-auto-mixcode/src/snippets/run/README.md)
 
 ## Roadmap
 
 - features
   - [ ] support unimport's addon
 - snippets
+  - [ ] i18n
   - [ ] immer
   - [ ] xstate
   - [ ] rxjs
