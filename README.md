@@ -77,21 +77,40 @@ export default defineConfig({
   - [ ] support unimport's addon
 - snippets
   - [ ] i18n
-  - [ ] immer
-  - [ ] xstate
-  - [ ] rxjs
-    - https://cn.vuejs.org/guide/extras/reactivity-in-depth.html#rxjs
+    - [Temporal](https://github.com/tc39/proposal-temporal)
+    - [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl)
+    - date-fns
+  - state manager
+    - https://cn.vuejs.org/guide/extras/reactivity-in-depth.html#integration-with-external-state-systems
+    - [ ] immer
+    - [ ] xstate
+    - [ ] rxjs
   - [ ] query
-    > (swr/useReactQuery or https://redux-toolkit.js.org/rtk-query/overview)
+    - swr
+    - TanStack Query (React Query)
+    - https://redux-toolkit.js.org/rtk-query/overview
+    - Apollo Client
+    - tRPC
+    - Relay
+  - [ ] data_visualization
+    > https://2022.stateofjs.com/zh-Hans/other-tools/#data_visualization
   - [ ] layout
   - [ ] Design Patterns
+  - [ ] fp
+    - https://ramdajs.com/
+    - https://github.com/lodash/lodash/wiki/FP-Guide
+  - https://github.com/colinhacks/zod
+  - https://github.com/stdlib-js/stdlib
   - [ ] polyfill
   - check other lib in unimport/unplugin-auto-import's preset
   - [ ] redux **list from `@/features/counter/counterSlice` like router**
   - [ ] pinia
     > `useCounterStore = $defineStore(() => {` =>
     > `useCounterStore = defineStore("counter", () => {`
+  - [ ] Web Worker
+    > https://github.com/BuilderIO/partytown
 - framework packages
+  - https://github.com/BuilderIO/mitosis
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-preact
   - [ ] glue-vue
