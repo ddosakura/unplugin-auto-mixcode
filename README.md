@@ -3,6 +3,8 @@
 Enhanced plug-in based in `unimport/unplugin-auto-import`, with opinionated
 programming paradigm.
 
+Inspired by:
+
 - https://github.com/unjs/unplugin
 - https://github.com/unjs/unimport
 - https://github.com/antfu/unplugin-auto-import
@@ -89,10 +91,11 @@ export default defineConfig({
   - [ ] pinia
     > `useCounterStore = $defineStore(() => {` =>
     > `useCounterStore = defineStore("counter", () => {`
-- packages
+- framework packages
   - [ ] [glue-vanilla](http://vanilla-js.com/)
   - [ ] glue-preact
   - [ ] glue-vue
   - [ ] glue-vue2
   - [ ] glue-solid
   - [ ] glue-svelte
+  - [ ] [glue-qwik](https://qwik.builder.io/)

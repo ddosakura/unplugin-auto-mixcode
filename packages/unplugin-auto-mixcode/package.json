@@ -15,10 +15,20 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     },
+    "./astro": {
+      "require": "./dist/astro.js",
+      "import": "./dist/astro.mjs",
+      "types": "./dist/astro.d.ts"
+    },
     "./esbuild": {
       "require": "./dist/esbuild.js",
       "import": "./dist/esbuild.mjs",
       "types": "./dist/esbuild.d.ts"
+    },
+    "./nuxt": {
+      "require": "./dist/nuxt.js",
+      "import": "./dist/nuxt.mjs",
+      "types": "./dist/nuxt.d.ts"
     },
     "./rollup": {
       "require": "./dist/rollup.js",

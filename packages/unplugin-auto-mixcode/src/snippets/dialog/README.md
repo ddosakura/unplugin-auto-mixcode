@@ -1,5 +1,11 @@
 # Dialog Snippet
 
+Inspired by:
+
+- https://juejin.cn/post/7182393187917365305
+- https://www.zhihu.com/question/35820643/answer/64646527
+- https://www.zhihu.com/question/35820643/answer/2286114480
+
 ## QuickStart
 
 ### React
