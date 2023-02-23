@@ -4,6 +4,7 @@ import { slash } from "@antfu/utils";
 import {
   PageContext,
   reactResolver,
+  type ReactRoute,
   type ResolvedOptions,
   type UserOptions,
   vueResolver,
@@ -32,6 +33,28 @@ function isTarget(path: string, options: ResolvedOptions) {
 
 const routeBlockQueryRE = /\?vue&type=route/;
 
+// https://github.com/hannoeru/vite-plugin-pages/issues/116
+// https://github1s.com/hannoeru/vite-plugin-pages/blob/HEAD/src/resolvers/react.ts
+const PATH_LAYOUT_PATH = "_layout";
+const isReactLayoutPath = (route: ReactRoute) =>
+  route.path === PATH_LAYOUT_PATH;
+const patchReactLayout = (routes: ReactRoute[]) => {
+  routes.forEach((route) => {
+    if (route.element || !route.children) return;
+    const layout = route.children.find(isReactLayoutPath);
+    if (!layout) return;
+    route.element = layout.element;
+    route.children = route.children.filter((r) => {
+      if (isReactLayoutPath(r)) return false;
+      if (r.children) {
+        patchReactLayout(r.children);
+      }
+      return true;
+    });
+  });
+  return routes;
+};
+
 export const snippetPages = (
   options: Partial<SnippetPagesOptions> = {},
 ): Snippet => {
@@ -41,12 +64,15 @@ export const snippetPages = (
     pageContext = new Promise<PageContext>((r) => {
       const ctx = new PageContext(
         {
-          ...options,
+          onRoutesGenerated: snippetContext.framework === "react"
+            ? patchReactLayout
+            : undefined,
           resolver: {
             react: reactResolver,
             vue: vueResolver,
             vue2: vueResolver,
           }[snippetContext.framework](),
+          ...options,
         },
         snippetContext.root,
       );

@@ -32,6 +32,7 @@ export default defineConfig({
       dts: "src/auto-imports.d.ts",
       imports: [
         "react",
+        "react-router-dom",
         // { "@mixcode/glue-react": ["usePromisifyDialog"] },
       ],
       dirs: ["src/hooks", "src/components"],
