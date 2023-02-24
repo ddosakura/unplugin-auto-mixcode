@@ -57,6 +57,7 @@ const createAppPlugin = (options: BootstrapOptions) => {
     imports: `import { ${creator} as create } from "vue";`,
     scripts: () => ({
       script: `const app = create(App, ${rootPropsCode});`,
+      // may change in ssr
       app: `app.mount("#${options.root}");`,
     }),
   });
@@ -89,10 +90,15 @@ router.isReady().then(() => {
 
 export function bootstrapVue3(options: BootstrapOptions) {
   const { imports, scripts } = parseBootstrapPlugins([
+    ...options.plugins.filter(({ enforce }) => enforce === "pre"),
     createAppPlugin(options),
+
     createRouterPlugin(options),
     options.store ? storePlugin : undefined,
+    ...options.plugins.filter(({ enforce }) => typeof enforce === "undefined"),
+
     createStartPlugin(options),
+    ...options.plugins.filter(({ enforce }) => enforce === "post"),
   ]);
   return [imports, scripts].join("\n");
 }

@@ -1,7 +1,11 @@
 import type { Framework, SnippetDefinition } from "@/core/types";
 import { getPlatform } from "@/snippets/shared";
 
-import { type BootstrapOptions, getRouterType } from "./common";
+import {
+  type BootstrapOptions,
+  getRouterType,
+  type UserPlugin,
+} from "./common";
 import { bootstrapReact } from "./react";
 import { bootstrapVue2 } from "./vue2";
 import { bootstrapVue3 } from "./vue3";
@@ -24,7 +28,13 @@ const DEFAULT_STORE = {
   vue2: "pinia",
 } satisfies Record<Framework, BootstrapOptions["store"]>;
 
-export const snippetBootstrap: SnippetDefinition = {
+export interface SnippetBootstrapOptions {
+  plugins: UserPlugin[];
+}
+
+export const snippetBootstrap = (
+  { plugins = [] }: Partial<SnippetBootstrapOptions> = {},
+): SnippetDefinition => ({
   dependencies: {
     // "vite-plugin-pages": { optional: true },
     pages: { optional: true, snippet: true },
@@ -61,6 +71,10 @@ export const snippetBootstrap: SnippetDefinition = {
       }
 
       const options: BootstrapOptions = {
+        plugins: [
+          ...plugins,
+          { enforce: "pre", imports: `import App from "${appPath}";` },
+        ],
         platform: getPlatform(framework),
         router: getRouterType(router),
         store: store === "" ? DEFAULT_STORE[framework] : (store as undefined),
@@ -71,14 +85,10 @@ export const snippetBootstrap: SnippetDefinition = {
       };
       return `
 import "~mixcode";
-
 ${typeof unocss === "undefined" ? "" : 'import "uno.css";'}
 ${typeof importScript === "undefined" ? "" : `import "${importScript}";`}
-
-import App from "${appPath}";
-
 ${FRAMEWORK_BOOTSTRAP[framework](options)}
 `;
     },
   },
-};
+});

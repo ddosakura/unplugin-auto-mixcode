@@ -13,6 +13,8 @@ type ReactStoreType = "recoil" | "pinia";
 type VueStoreType = "pinia";
 
 export interface BootstrapOptions {
+  plugins: UserPlugin[];
+
   platform: Platform;
   router?: RouterType;
   store?: ReactStoreType | VueStoreType;
@@ -35,6 +37,10 @@ interface CommonPlugin {
   scripts: Arrayable<
     string | ((app: string) => string | { script: string; app?: string })
   >;
+}
+
+export interface UserPlugin extends Partial<CommonPlugin> {
+  enforce?: "pre" | "post";
 }
 
 export type BootstrapPlugin = Partial<CommonPlugin> | string;

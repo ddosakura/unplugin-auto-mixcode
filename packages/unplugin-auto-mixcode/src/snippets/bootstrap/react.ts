@@ -164,14 +164,15 @@ const AppWithContainer = (props) => <Container {...props}>
 
 export function bootstrapReact(options: BootstrapOptions) {
   const { imports, scripts } = parseBootstrapPlugins([
+    ...options.plugins.filter(({ enforce }) => enforce === "pre"),
+    `import React from "react";\nimport { Suspense } from "react";`,
+
     createRouterPlugin(options),
     createStorePlugin(options.store),
+    ...options.plugins.filter(({ enforce }) => typeof enforce === "undefined"),
+
     ...createPlatformPlugin(options),
+    ...options.plugins.filter(({ enforce }) => enforce === "post"),
   ]);
-  return `
-import React from "react";
-import { Suspense } from "react";
-${imports}
-${scripts}
-`;
+  return [imports, scripts].join("\n");
 }

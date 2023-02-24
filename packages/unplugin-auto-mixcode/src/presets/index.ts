@@ -2,6 +2,7 @@ import type { FrameworkSnippet, Preset, SnippetDefinition } from "@/core/types";
 import {
   snippetBlocks,
   snippetBootstrap,
+  type SnippetBootstrapOptions,
   snippetDialog,
   type SnippetDialogOptions,
   snippetPages,
@@ -10,17 +11,19 @@ import {
 } from "@/snippets";
 
 export interface PresetRecommendOptions {
+  bootstrap: Partial<SnippetBootstrapOptions>;
   dialog: Partial<SnippetDialogOptions>;
   pages: Partial<SnippetPagesOptions>;
 }
 
 export const presetRecommend = ({
+  bootstrap,
   dialog,
   pages,
 }: Partial<PresetRecommendOptions> = {}): Preset => ({
   snippets: {
     blocks: snippetBlocks,
-    bootstrap: snippetBootstrap,
+    bootstrap: snippetBootstrap(bootstrap),
     dialog: snippetDialog(dialog),
     pages: snippetPages(pages),
     run: snippetRun,

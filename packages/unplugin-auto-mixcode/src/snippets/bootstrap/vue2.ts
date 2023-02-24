@@ -79,14 +79,15 @@ app.$mount("#${options.root}");
 
 export function bootstrapVue2(options: BootstrapOptions) {
   const { imports, scripts } = parseBootstrapPlugins([
+    ...options.plugins.filter(({ enforce }) => enforce === "pre"),
+    `import Vue from "${options.platform === "hippy" ? "@hippy/vue" : "vue"}";`,
+
     createRouterPlugin(options),
     options.store ? storePlugin : undefined,
-    createPlatformPlugin(options),
-  ]);
+    ...options.plugins.filter(({ enforce }) => typeof enforce === "undefined"),
 
-  return `
-import Vue from "${options.platform === "hippy" ? "@hippy/vue" : "vue"}";
-${imports}
-${scripts}
-`;
+    createPlatformPlugin(options),
+    ...options.plugins.filter(({ enforce }) => enforce === "post"),
+  ]);
+  return [imports, scripts].join("\n");
 }
