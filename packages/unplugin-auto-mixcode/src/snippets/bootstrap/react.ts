@@ -1,3 +1,4 @@
+import { PREFIX_MIXCODE_VIRTUAL_MODULE } from "@/core/utils";
 import { getRouterPackage, type Platform } from "@/snippets/shared";
 
 import {
@@ -89,6 +90,11 @@ const recoilPlugin = createBootstrapPlugin({
   }),
 });
 
+/**
+ * not recommended
+ *
+ * @link https://github.com/antfu/reactivue/pull/46
+ */
 const piniaPlugin = createBootstrapPlugin({
   imports: `
 import { createPinia } from "pinia";
@@ -104,6 +110,18 @@ const storePlugins = {
 
 const createStorePlugin = (store: BootstrapOptions["store"]) =>
   storePlugins[`${store}Plugin`];
+
+// === i18n ===
+
+/** @link https://github.com/i18next/react-i18next */
+const i18nextPlugin = <BootstrapPlugin> {
+  imports: `import "${PREFIX_MIXCODE_VIRTUAL_MODULE}i18n/i18next";`,
+};
+
+const createI18nPlugin = (options: BootstrapOptions) => {
+  if (typeof options.i18n === "undefined") return;
+  return i18nextPlugin;
+};
 
 // === platform & ssr ===
 
@@ -169,6 +187,7 @@ export function bootstrapReact(options: BootstrapOptions) {
 
     createRouterPlugin(options),
     createStorePlugin(options.store),
+    createI18nPlugin(options),
     ...options.plugins.filter(({ enforce }) => typeof enforce === "undefined"),
 
     ...createPlatformPlugin(options),

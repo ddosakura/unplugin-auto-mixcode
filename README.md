@@ -60,6 +60,7 @@ export default defineConfig({
     - [ ] vue2
       - https://v2.ssr.vuejs.org/zh/guide/
 - [dialog _react|vue|vue2_](./packages/unplugin-auto-mixcode/src/snippets/dialog/README.md)
+- [i18n _compatible_](./packages/unplugin-auto-mixcode/src/snippets/i18n/README.md)
 - [pages _compatible_](./packages/unplugin-auto-mixcode/src/snippets/pages/README.md)
   - **Webpack's hmr is unavailable.**
   - [ ] spa
@@ -76,10 +77,6 @@ export default defineConfig({
 - features
   - [ ] support unimport's addon
 - snippets
-  - [ ] i18n
-    - [Temporal](https://github.com/tc39/proposal-temporal)
-    - [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl)
-    - date-fns
   - state manager
     - https://cn.vuejs.org/guide/extras/reactivity-in-depth.html#integration-with-external-state-systems
     - [ ] immer

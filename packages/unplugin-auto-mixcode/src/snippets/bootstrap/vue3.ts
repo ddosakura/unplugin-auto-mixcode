@@ -1,3 +1,6 @@
+import { isPackageExists } from "local-pkg";
+
+import { PREFIX_MIXCODE_VIRTUAL_MODULE } from "@/core/utils";
 import { getRouterPackage } from "@/snippets/shared";
 
 import {
@@ -42,6 +45,32 @@ app.use(router);
 const storePlugin = <BootstrapPlugin> {
   imports: `import { createPinia } from "pinia";`,
   scripts: "app.use(createPinia());",
+};
+
+// === i18n ===
+
+const i18nPlugin = <BootstrapPlugin> {
+  imports: `
+import { createI18n } from "vue-i18n";
+import i18nOptions from "${PREFIX_MIXCODE_VIRTUAL_MODULE}i18n/vue";
+`,
+  scripts: `app.use(createI18n(i18nOptions));`,
+};
+
+/** @link https://github.com/i18next/i18next-vue */
+const i18nextPlugin = <BootstrapPlugin> {
+  imports: `
+import i18next from "i18next";
+import I18NextVue from "i18next-vue";
+import "${PREFIX_MIXCODE_VIRTUAL_MODULE}i18n/i18next";
+`,
+  scripts: `app.use(I18NextVue, { i18next });`,
+};
+
+const createI18nPlugin = (options: BootstrapOptions) => {
+  if (typeof options.i18n === "undefined") return;
+  if (isPackageExists("vue-i18n")) return i18nPlugin;
+  return i18nextPlugin;
 };
 
 // === platform & ssr ===
@@ -95,6 +124,7 @@ export function bootstrapVue3(options: BootstrapOptions) {
 
     createRouterPlugin(options),
     options.store ? storePlugin : undefined,
+    createI18nPlugin(options),
     ...options.plugins.filter(({ enforce }) => typeof enforce === "undefined"),
 
     createStartPlugin(options),

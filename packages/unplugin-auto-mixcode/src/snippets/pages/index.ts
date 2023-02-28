@@ -98,7 +98,8 @@ export const snippetPages = (
               const ctx = await getPageContext(this);
               const page = ctx.options.dirs.find((i) =>
                 path.startsWith(slash(resolve(this.root, i.dir)))
-              )!;
+              );
+              if (!page) return;
               await ctx.addPage(path, page);
               break;
             }

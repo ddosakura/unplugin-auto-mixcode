@@ -66,6 +66,7 @@
     "@antfu/utils": "^0.7.2",
     "@rollup/pluginutils": "^5.0.2",
     "chokidar": "^3.5.3",
+    "fast-glob": "^3.2.12",
     "local-pkg": "^0.4.3",
     "magic-string": "^0.27.0",
     "minimatch": "^6.1.10",

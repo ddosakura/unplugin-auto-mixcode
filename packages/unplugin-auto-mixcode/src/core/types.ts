@@ -20,6 +20,7 @@ export type SnippetDependencies = Arrayable<
 >;
 
 export interface SnippetContext {
+  readonly dev: boolean;
   readonly root: string;
   readonly logger?: Logger;
   readonly framework: Framework;

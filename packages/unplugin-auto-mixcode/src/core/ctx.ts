@@ -140,6 +140,7 @@ export class Context {
 
   get snippetContext(): SnippetContext {
     return {
+      dev: this.devMode,
       root: this.options.root,
       logger: this.#logger,
       framework: this.options.framework,

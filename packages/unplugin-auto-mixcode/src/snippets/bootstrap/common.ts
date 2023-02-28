@@ -18,6 +18,7 @@ export interface BootstrapOptions {
   platform: Platform;
   router?: RouterType;
   store?: ReactStoreType | VueStoreType;
+  i18n?: string;
   ssr: boolean;
 
   /** web platform root elementId */

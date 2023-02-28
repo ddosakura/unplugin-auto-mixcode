@@ -5,13 +5,14 @@ import UnoCSS from "unocss/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Inspect from "vite-plugin-inspect";
 
-import { presetRecommend } from "@mixcode/unplugin-auto-mixcode";
+import { presetRecommend, snippetI18n } from "@mixcode/unplugin-auto-mixcode";
 import AutoMixcode from "@mixcode/unplugin-auto-mixcode/vite";
 
 const mixcode = AutoMixcode({
   dts: "src/auto-mixcode.d.ts",
   presets: [presetRecommend()],
   snippets: {
+    i18n: snippetI18n(),
     foo: {
       macro() {
         return 'import "~mixcode/foo/bar"';
@@ -33,6 +34,7 @@ export default defineConfig({
       imports: [
         "react",
         "react-router-dom",
+        "jotai",
         // { "@mixcode/glue-react": ["usePromisifyDialog"] },
       ],
       dirs: ["src/hooks", "src/components"],
@@ -40,6 +42,8 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: { "@": "./src" },
+    alias: {
+      "@": "./src",
+    },
   },
 });

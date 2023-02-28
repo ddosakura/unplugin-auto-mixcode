@@ -12,6 +12,15 @@
         }
       ],
       [
+        "src/hooks/useTranslation.ts",
+        {
+          "instanceof": "Set",
+          "value": [
+            "i18n/vue"
+          ]
+        }
+      ],
+      [
         "src/modules/dynamic.tsx",
         {
           "instanceof": "Set",
