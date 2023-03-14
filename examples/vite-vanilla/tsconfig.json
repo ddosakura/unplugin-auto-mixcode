@@ -1,0 +1,7 @@
+{
+  "extends": "@mixcode/tsconfig/vue.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}

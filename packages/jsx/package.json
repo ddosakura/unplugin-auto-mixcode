@@ -1,0 +1,29 @@
+{
+  "name": "@mixcode/jsx",
+  "repository": "https://github.com/ddosakura/unplugin-auto-mixcode.git",
+  "author": "ddosakura",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "files": [
+    "dist/*"
+  ],
+  "exports": {
+    "./jsx-runtime": {
+      "import": "./dist/jsx-runtime.mjs",
+      "types": "./dist/jsx-runtime.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./dist/jsx-dev-runtime.mjs",
+      "types": "./dist/jsx-dev-runtime.d.ts"
+    }
+  },
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsup --watch src",
+    "build": "tsup",
+    "lint": "eslint --ext .ts,tsx,vue ./src --fix"
+  }
+}

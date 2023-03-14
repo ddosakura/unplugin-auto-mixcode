@@ -1,6 +1,9 @@
 # Pages Snippet
 
-Inspired by [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages)
+Inspired by:
+
+- https://github.com/hannoeru/vite-plugin-pages
+- https://github.com/posva/unplugin-vue-router
 
 ## QuickStart
 

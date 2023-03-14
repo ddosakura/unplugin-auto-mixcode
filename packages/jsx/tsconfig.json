@@ -1,0 +1,6 @@
+{
+  "extends": "@mixcode/tsconfig/vue.json",
+  "include": [
+    "src"
+  ]
+}
