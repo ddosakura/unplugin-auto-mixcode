@@ -1,4 +1,7 @@
-type MixNode<T> = Partial<T> & { children?: any };
+type MixNode<T extends HTMLElement> = Partial<Omit<T, "children" | "style">> & {
+  children?: any;
+  style?: Partial<T["style"]>;
+};
 
 export namespace JSX {
   export interface IntrinsicElements {

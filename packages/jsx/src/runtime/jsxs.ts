@@ -15,9 +15,12 @@ export const jsxs = (
   if (typeof type !== "string") {
     return type(rawProps);
   }
-  const { children = [], ...props } = rawProps ?? {};
+  const { children = [], style = {}, ...props } = rawProps ?? {};
   const el = document.createElement(type);
-  Object.entries(props).forEach(([k, v]) => el[k as "id"] = v as string);
+  Object.entries(props)
+    .forEach(([k, v]) => el[k as "id"] = v as string);
+  Object.entries(style)
+    .forEach(([k, v]) => el.style[k as "color"] = v as string);
   const list = Array.isArray(children) ? children.flat(Infinity) : [children];
   el.append(...list);
   return el;
