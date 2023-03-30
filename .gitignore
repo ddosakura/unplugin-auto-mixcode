@@ -1,4 +1,5 @@
 .tmp
+.local
 .turbo
 .pnpm-store
 node_modules
