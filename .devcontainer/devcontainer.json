@@ -1,8 +1,8 @@
 {
   "name": "unplugin-auto-mixcode",
   "image": "ddosakura/hakke:1.2.0-lit",
-  "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
-  "postCreateCommand": "corepack enable && npm config set registry http://mirrors.tencent.com/npm/",
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+  "postCreateCommand": "corepack enable",
   "customizations": {
     "vscode": {
       "settings": {
