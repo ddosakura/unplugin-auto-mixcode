@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "eamodio.gitlens",
+    "mutantdino.resourcemonitor",
+    "dprint.dprint",
+    "dbaeumer.vscode-eslint",
+    "antfu.unocss",
+    "antfu.iconify",
+    "antfu.goto-alias",
+    "csstools.postcss",
+    "vue.volar",
+    "Vue.vscode-typescript-vue-plugin"
+  ]
+}

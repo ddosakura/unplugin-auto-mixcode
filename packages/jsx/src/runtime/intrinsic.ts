@@ -3,6 +3,7 @@ type MixNode<T extends HTMLElement> = Partial<Omit<T, "children" | "style">> & {
   style?: Partial<T["style"]>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace JSX {
   export interface IntrinsicElements {
     // TODO: HTMLElementTagNameMap

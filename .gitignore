@@ -1,3 +1,5 @@
+.devcontainer/devcontainer.env
+
 .tmp
 .local
 .turbo

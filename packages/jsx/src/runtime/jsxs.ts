@@ -1,5 +1,6 @@
 import type { JSX } from "./intrinsic";
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type FC<Props = {}> = (props: Props) => HTMLElement | HTMLElement[];
 
 export const Fragment: FC<{ children?: any }> = (props) => {

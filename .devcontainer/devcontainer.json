@@ -1,18 +1,10 @@
 {
   "name": "unplugin-auto-mixcode",
   "image": "ddosakura/hakke:1.2.0-lit",
+  "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
   "postCreateCommand": "corepack enable && npm config set registry http://mirrors.tencent.com/npm/",
   "customizations": {
     "vscode": {
-      "extensions": [
-        "dbaeumer.vscode-eslint",
-        "dprint.dprint",
-        "eamodio.gitlens",
-        "mutantdino.resourcemonitor",
-        "antfu.unocss",
-        "vue.volar",
-        "Vue.vscode-typescript-vue-plugin"
-      ],
       "settings": {
         "editor.fontFamily": "Cascadia Code, Consolas, 'Courier New', monospace",
         "editor.fontLigatures": true

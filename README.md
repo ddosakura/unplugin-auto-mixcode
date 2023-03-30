@@ -75,6 +75,7 @@ export default defineConfig({
 
 ## Roadmap
 
+- [ ] https://github.com/aleclarson/vite-tsconfig-paths
 - features
   - [ ] support unimport's addon
 - snippets
