@@ -2,7 +2,7 @@
   "name": "@mixcode/eslint-config",
   "repository": "https://github.com/ddosakura/unplugin-auto-mixcode/tree/master/packages/eslint-config#readme",
   "author": "ddosakura",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "dependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
