@@ -20,6 +20,7 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.0",
     "@digitak/esrun": "^3.2.19",
     "@iconify/json": "^2.2.19",
