@@ -12,6 +12,8 @@
   "keywords": [],
   "scripts": {
     "publish-packages": "turbo run build lint test && changeset version && changeset publish",
+    "beta:enter": "changeset pre enter beta",
+    "beta:exit": "changeset pre exit",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "start": "turbo run start --parallel",

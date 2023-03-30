@@ -19,6 +19,15 @@
             "dialog/use$HelloDialog"
           ]
         }
+      ],
+      [
+        "src/components/examples/ExampleDialog.vue?vue&type=script&setup=true&lang.ts",
+        {
+          "instanceof": "Set",
+          "value": [
+            "dialog/use$HelloDialog"
+          ]
+        }
       ]
     ]
   }

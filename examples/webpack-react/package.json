@@ -3,8 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "start:pass": "craco start",
-    "build": "craco build"
+    "start:pass": "craco start"
   },
   "dependencies": {
     "react": "^18.2.0",
